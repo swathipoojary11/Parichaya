@@ -1,1 +1,1 @@
-CareerForge AI is a zero-cloud career suite powered by a local 4-bit SLM on 8 GB consumer machines. Via low-latency WebSockets, it offers real-time speech pacing analysis, dynamic ATS gap matching, and adaptive mock interviews with guaranteed privacy.
+Parichaya AI is a zero-cloud career suite powered by a local 4-bit SLM on 8 GB consumer machines. Via low-latency WebSockets, it offers real-time speech pacing analysis, dynamic ATS gap matching, and adaptive mock interviews with guaranteed privacy.
