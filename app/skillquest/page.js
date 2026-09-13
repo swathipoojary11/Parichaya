@@ -10,7 +10,8 @@ import AiTalkingCoach from "@/components/skillquest/AiTalkingCoach";
 import StarStoryBuilder from "@/components/skillquest/StarStoryBuilder";
 import SentenceUpgradeChallenge from "@/components/skillquest/SentenceUpgradeChallenge";
 import ReassessmentComparison from "@/components/skillquest/ReassessmentComparison";
-import { checkLevelUnlockCondition, LEVEL_TIERS } from "@/lib/services/performanceLevelService";
+import ChatFeedbackPanel from "@/components/feedback/ChatFeedbackPanel";
+import { checkLevelUnlockCondition } from "@/lib/services/performanceLevelService";
 import { getReassessmentComparisonReport } from "@/lib/services/reassessmentService";
 import { triggerConfetti } from "@/lib/services/gamificationService";
 import { useRouter } from "next/navigation";
@@ -22,13 +23,11 @@ export default function SkillQuestPage() {
   const [softMode, setSoftMode] = useState("coach"); // "coach" | "star" | "upgrade"
   const [completedChallenges, setCompletedChallenges] = useState([]);
   const [reassessmentReport, setReassessmentReport] = useState(null);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     async function loadData() {
       const rep = await getReassessmentComparisonReport();
       setReassessmentReport(rep);
-      setLoading(false);
     }
     loadData();
   }, []);
@@ -43,52 +42,64 @@ export default function SkillQuestPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-xs font-mono border border-orange-500/20">
+      <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-soft flex flex-wrap items-center justify-between gap-4">
+        <div className="space-y-2">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-mono font-bold border border-indigo-200">
             <span>● Closed-Loop SkillQuest Engine</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-zinc-50 tracking-tight">
-            PARICHAYA <span className="text-orange-500">SkillQuest Hub</span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            PARICHAYA <span className="text-indigo-600">SkillQuest Hub</span>
           </h1>
-          <p className="text-sm text-zinc-400 max-w-xl">
-            Execute in-browser code challenges, practice with your AI Talking Coach, unlock performance tiers (minimum 70% score), and track your progress loop.
+          <p className="text-sm text-slate-600 max-w-xl leading-relaxed">
+            Solve in-browser code challenges, practice with AI Talking Coach, unlock performance tiers (&ge;70% score), and re-assess your skills.
           </p>
         </div>
 
         {/* Level Unlock Badge */}
-        <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-4 text-xs font-mono space-y-1">
-          <div className="flex items-center justify-between text-zinc-400">
-            <span>Level 2 Unlock Status:</span>
-            <span className={level2Unlock.isUnlocked ? "text-emerald-400 font-bold" : "text-amber-400 font-bold"}>
+        <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 text-xs font-mono space-y-1 shadow-xs min-w-[220px]">
+          <div className="flex items-center justify-between text-slate-700">
+            <span className="font-bold">Level 2 Status:</span>
+            <span className={level2Unlock.isUnlocked ? "text-emerald-700 font-bold" : "text-amber-700 font-bold"}>
               {level2Unlock.isUnlocked ? "✓ UNLOCKED" : "🔒 LOCKED"}
             </span>
           </div>
-          <p className="text-[11px] text-zinc-500">
-            Requires: {level2Unlock.minAttempts} challenge with &ge; {level2Unlock.reqScore}% score ({level2Unlock.currentSuccessfulAttempts}/{level2Unlock.minAttempts} done)
+          <p className="text-[11px] text-slate-500 font-medium">
+            Requires: {level2Unlock.minAttempts} challenge with &ge;{level2Unlock.reqScore}% score
           </p>
         </div>
       </div>
 
       {/* Main Mode Navigation Tabs */}
-      <div className="flex items-center space-x-3 border-b border-zinc-800 pb-3 font-mono text-xs">
+      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-3 font-mono text-xs">
         <button
           onClick={() => setActiveTab("tech")}
-          className={`px-4 py-2 rounded-xl transition-all ${activeTab === "tech" ? "bg-orange-500 text-white font-bold shadow-lg shadow-orange-500/20" : "bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800"}`}
+          className={`px-4 py-2.5 rounded-xl transition-all font-semibold ${
+            activeTab === "tech"
+              ? "bg-indigo-600 text-white shadow-md"
+              : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
+          }`}
         >
           ⚙ TechQuest (Code Runner &amp; MCQs)
         </button>
 
         <button
           onClick={() => setActiveTab("soft")}
-          className={`px-4 py-2 rounded-xl transition-all ${activeTab === "soft" ? "bg-orange-500 text-white font-bold shadow-lg shadow-orange-500/20" : "bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800"}`}
+          className={`px-4 py-2.5 rounded-xl transition-all font-semibold ${
+            activeTab === "soft"
+              ? "bg-indigo-600 text-white shadow-md"
+              : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
+          }`}
         >
-          🐱 SoftSkill Quest (AI Talking Coach)
+          🐱 SoftSkill Quest (AI Companion)
         </button>
 
         <button
           onClick={() => setActiveTab("reassessment")}
-          className={`px-4 py-2 rounded-xl transition-all ${activeTab === "reassessment" ? "bg-emerald-600 text-white font-bold shadow-lg shadow-emerald-500/20" : "bg-zinc-900 text-zinc-400 hover:text-zinc-200 border border-zinc-800"}`}
+          className={`px-4 py-2.5 rounded-xl transition-all font-semibold ${
+            activeTab === "reassessment"
+              ? "bg-emerald-600 text-white shadow-md"
+              : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
+          }`}
         >
           🔄 Reassessment Comparison
         </button>
@@ -99,19 +110,19 @@ export default function SkillQuestPage() {
         <div className="flex items-center space-x-2 text-xs font-mono">
           <button
             onClick={() => setTechMode("code")}
-            className={`px-3 py-1.5 rounded-lg border ${techMode === "code" ? "bg-zinc-800 border-orange-500 text-orange-400 font-bold" : "bg-zinc-950 border-zinc-800 text-zinc-400"}`}
+            className={`px-3 py-1.5 rounded-xl border ${techMode === "code" ? "bg-indigo-50 border-indigo-300 text-indigo-700 font-bold" : "bg-white border-slate-200 text-slate-600"}`}
           >
             In-Browser Code Runner
           </button>
           <button
             onClick={() => setTechMode("arrange")}
-            className={`px-3 py-1.5 rounded-lg border ${techMode === "arrange" ? "bg-zinc-800 border-orange-500 text-orange-400 font-bold" : "bg-zinc-950 border-zinc-800 text-zinc-400"}`}
+            className={`px-3 py-1.5 rounded-xl border ${techMode === "arrange" ? "bg-indigo-50 border-indigo-300 text-indigo-700 font-bold" : "bg-white border-slate-200 text-slate-600"}`}
           >
             Code Line Assembly
           </button>
           <button
             onClick={() => setTechMode("mcq")}
-            className={`px-3 py-1.5 rounded-lg border ${techMode === "mcq" ? "bg-zinc-800 border-orange-500 text-orange-400 font-bold" : "bg-zinc-950 border-zinc-800 text-zinc-400"}`}
+            className={`px-3 py-1.5 rounded-xl border ${techMode === "mcq" ? "bg-indigo-50 border-indigo-300 text-indigo-700 font-bold" : "bg-white border-slate-200 text-slate-600"}`}
           >
             Timed MCQ Battle
           </button>
@@ -123,48 +134,61 @@ export default function SkillQuestPage() {
         <div className="flex items-center space-x-2 text-xs font-mono">
           <button
             onClick={() => setSoftMode("coach")}
-            className={`px-3 py-1.5 rounded-lg border ${softMode === "coach" ? "bg-zinc-800 border-orange-500 text-orange-400 font-bold" : "bg-zinc-950 border-zinc-800 text-zinc-400"}`}
+            className={`px-3 py-1.5 rounded-xl border ${softMode === "coach" ? "bg-indigo-50 border-indigo-300 text-indigo-700 font-bold" : "bg-white border-slate-200 text-slate-600"}`}
           >
-            AI Talking Companion Coach
+            AI Companion Coach
           </button>
           <button
             onClick={() => setSoftMode("star")}
-            className={`px-3 py-1.5 rounded-lg border ${softMode === "star" ? "bg-zinc-800 border-orange-500 text-orange-400 font-bold" : "bg-zinc-950 border-zinc-800 text-zinc-400"}`}
+            className={`px-3 py-1.5 rounded-xl border ${softMode === "star" ? "bg-indigo-50 border-indigo-300 text-indigo-700 font-bold" : "bg-white border-slate-200 text-slate-600"}`}
           >
             STAR Story Builder
           </button>
           <button
             onClick={() => setSoftMode("upgrade")}
-            className={`px-3 py-1.5 rounded-lg border ${softMode === "upgrade" ? "bg-zinc-800 border-orange-500 text-orange-400 font-bold" : "bg-zinc-950 border-zinc-800 text-zinc-400"}`}
+            className={`px-3 py-1.5 rounded-xl border ${softMode === "upgrade" ? "bg-indigo-50 border-indigo-300 text-indigo-700 font-bold" : "bg-white border-slate-200 text-slate-600"}`}
           >
             Sentence Impact Upgrade
           </button>
         </div>
       )}
 
-      {/* Main Interactive Challenge Sandbox */}
-      {activeTab === "tech" && (
-        <>
-          {techMode === "code" && <CodeEditorChallenge onComplete={handleChallengeComplete} />}
-          {techMode === "arrange" && <CodeArrangementChallenge onComplete={handleChallengeComplete} />}
-          {techMode === "mcq" && <McqBattleChallenge onComplete={handleChallengeComplete} />}
-        </>
-      )}
+      {/* Multi-Panel Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Main Challenge Arena (8 Cols) */}
+        <div className="lg:col-span-8 space-y-6">
+          {activeTab === "tech" && (
+            <>
+              {techMode === "code" && <CodeEditorChallenge onComplete={handleChallengeComplete} />}
+              {techMode === "arrange" && <CodeArrangementChallenge onComplete={handleChallengeComplete} />}
+              {techMode === "mcq" && <McqBattleChallenge onComplete={handleChallengeComplete} />}
+            </>
+          )}
 
-      {activeTab === "soft" && (
-        <>
-          {softMode === "coach" && <AiTalkingCoach onComplete={handleChallengeComplete} />}
-          {softMode === "star" && <StarStoryBuilder onComplete={handleChallengeComplete} />}
-          {softMode === "upgrade" && <SentenceUpgradeChallenge onComplete={handleChallengeComplete} />}
-        </>
-      )}
+          {activeTab === "soft" && (
+            <>
+              {softMode === "coach" && <AiTalkingCoach onComplete={handleChallengeComplete} />}
+              {softMode === "star" && <StarStoryBuilder onComplete={handleChallengeComplete} />}
+              {softMode === "upgrade" && <SentenceUpgradeChallenge onComplete={handleChallengeComplete} />}
+            </>
+          )}
 
-      {activeTab === "reassessment" && (
-        <ReassessmentComparison
-          report={reassessmentReport}
-          onStartReassessment={() => router.push("/interview")}
-        />
-      )}
+          {activeTab === "reassessment" && (
+            <ReassessmentComparison
+              report={reassessmentReport}
+              onStartReassessment={() => router.push("/interview")}
+            />
+          )}
+        </div>
+
+        {/* AI Chat Feedback Panel (4 Cols) */}
+        <div className="lg:col-span-4 sticky top-20">
+          <ChatFeedbackPanel
+            contextTitle="SkillQuest AI Coach"
+            contextData={{ activeTab, completedCount: completedChallenges.length }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import FeedbackReportView from "@/components/interview/FeedbackReportView";
+import ChatFeedbackPanel from "@/components/feedback/ChatFeedbackPanel";
 import { evaluateSession } from "@/lib/services/feedbackService";
 import { useRouter } from "next/navigation";
 
@@ -40,17 +41,30 @@ export default function InterviewFeedbackPage() {
   return (
     <div className="space-y-8">
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-20 space-y-4 text-center">
-          <div className="w-12 h-12 rounded-full border-4 border-orange-500/20 border-t-orange-500 animate-spin" />
-          <h3 className="text-lg font-bold text-zinc-100 font-mono">Qwen2.5 3B Evaluating Response STAR Structure...</h3>
-          <p className="text-xs text-zinc-400">Analyzing technical depth, speech cadence, and filler-word frequencies...</p>
+        <div className="flex flex-col items-center justify-center py-20 space-y-4 text-center bg-white border border-slate-200 rounded-3xl shadow-soft">
+          <div className="w-12 h-12 rounded-full border-4 border-indigo-200 border-t-indigo-600 animate-spin" />
+          <h3 className="text-lg font-bold text-slate-900 font-mono">Qwen2.5 3B Evaluating STAR Structure...</h3>
+          <p className="text-xs text-slate-500">Analyzing technical depth, speech cadence, and filler-word frequencies...</p>
         </div>
       ) : (
-        <FeedbackReportView
-          feedback={feedback}
-          telemetry={telemetry}
-          onNewSession={() => router.push("/interview")}
-        />
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          {/* Main Feedback Report (8 Cols) */}
+          <div className="lg:col-span-8">
+            <FeedbackReportView
+              feedback={feedback}
+              telemetry={telemetry}
+              onNewSession={() => router.push("/interview")}
+            />
+          </div>
+
+          {/* AI Chat Assistant (4 Cols) */}
+          <div className="lg:col-span-4 sticky top-20">
+            <ChatFeedbackPanel
+              contextTitle="Interview Feedback Coach"
+              contextData={{ feedback, telemetry }}
+            />
+          </div>
+        </div>
       )}
     </div>
   );

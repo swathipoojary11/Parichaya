@@ -46,21 +46,21 @@ export default function PdfDropzone({ onParsedText, onRawFile }) {
 
   return (
     <div className="space-y-3">
-      <label className="block text-xs font-mono text-zinc-400">Upload Existing Resume (PDF Only) *</label>
+      <label className="block text-xs font-bold text-slate-700">Upload Existing Resume (PDF Only) *</label>
       <div
         onDrop={handleDrop}
         onDragOver={handleDragOver}
-        className="border-2 border-dashed border-zinc-800 hover:border-orange-500/50 rounded-xl p-6 text-center bg-zinc-950/50 transition-colors cursor-pointer space-y-3"
+        className="border-2 border-dashed border-slate-300 hover:border-indigo-500 rounded-2xl p-6 text-center bg-slate-50 transition-colors cursor-pointer space-y-3"
       >
-        <div className="w-12 h-12 mx-auto rounded-full bg-orange-500/10 text-orange-400 flex items-center justify-center font-bold text-lg border border-orange-500/20">
+        <div className="w-12 h-12 mx-auto rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xl border border-indigo-100 shadow-xs">
           📄
         </div>
 
         <div>
-          <p className="text-sm font-semibold text-zinc-200">
-            {fileName ? fileName : "Drag and drop your PDF resume here"}
+          <p className="text-sm font-bold text-slate-900">
+            {fileName ? fileName : "Drag & drop your PDF resume here"}
           </p>
-          <p className="text-xs text-zinc-500 mt-1">100% In-Browser Local Parse &bull; Zero Server Upload</p>
+          <p className="text-xs text-slate-500 mt-1">100% Client PDF Extraction &bull; Zero Cloud Leakage</p>
         </div>
 
         <div>
@@ -78,12 +78,12 @@ export default function PdfDropzone({ onParsedText, onRawFile }) {
             loading={parsing}
             onClick={() => document.getElementById("pdf-upload-input").click()}
           >
-            {fileName ? "Change PDF File" : "Select PDF File"}
+            {fileName ? "Change PDF File" : "Browse PDF File"}
           </Button>
         </div>
       </div>
 
-      {error && <p className="text-xs text-red-400 font-mono">{error}</p>}
+      {error && <p className="text-xs text-red-600 font-mono font-medium">{error}</p>}
     </div>
   );
 }

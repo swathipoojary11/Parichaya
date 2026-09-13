@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import Button from "@/components/ui/Button";
 import VideoArena from "@/components/interview/VideoArena";
 import LiveHudTelemetry from "@/components/interview/LiveHudTelemetry";
+import ChatFeedbackPanel from "@/components/feedback/ChatFeedbackPanel";
 import { createInterviewSession, saveSessionTranscript } from "@/lib/services/interviewService";
 import { useRouter } from "next/navigation";
 
@@ -22,43 +23,43 @@ export default function InterviewPage() {
   const recognitionRef = useRef(null);
   const timerRef = useRef(null);
 
-  // Initialize Session & Connect to WebSocket Telemetry Server
   useEffect(() => {
     async function initSession() {
       const newSession = await createInterviewSession("Full Stack Engineer", "technical");
       setSession(newSession.sessionRecord);
 
-      // Connect to local WebSocket IPC telemetry server on port 3001
-      try {
-        const ws = new WebSocket("ws://127.0.0.1:3001");
+      if (typeof window !== "undefined") {
+        try {
+          const ws = new WebSocket("ws://127.0.0.1:3001");
 
-        ws.onopen = () => {
-          setWsConnected(true);
-          console.log("[AURA Client] Connected to ws://127.0.0.1:3001");
-        };
+          ws.onopen = () => {
+            setWsConnected(true);
+            console.log("[AURA Client] Connected to ws://127.0.0.1:3001");
+          };
 
-        ws.onmessage = (evt) => {
-          try {
-            const data = JSON.parse(evt.data);
-            if (data.type === "telemetry_update") {
-              setTelemetry({
-                wpm: data.wpm,
-                totalWords: data.totalWords,
-                totalFillers: data.totalFillers,
-                fillerWordCounts: data.fillerWordCounts
-              });
+          ws.onmessage = (evt) => {
+            try {
+              const data = JSON.parse(evt.data);
+              if (data.type === "telemetry_update") {
+                setTelemetry({
+                  wpm: data.wpm,
+                  totalWords: data.totalWords,
+                  totalFillers: data.totalFillers,
+                  fillerWordCounts: data.fillerWordCounts
+                });
+              }
+            } catch (e) {
+              console.error(e);
             }
-          } catch (e) {
-            console.error(e);
-          }
-        };
+          };
 
-        ws.onerror = () => setWsConnected(false);
-        ws.onclose = () => setWsConnected(false);
+          ws.onerror = () => setWsConnected(false);
+          ws.onclose = () => setWsConnected(false);
 
-        wsRef.current = ws;
-      } catch (err) {
-        console.warn("WebSocket telemetry server offline:", err);
+          wsRef.current = ws;
+        } catch (err) {
+          console.warn("WebSocket telemetry server offline:", err);
+        }
       }
     }
 
@@ -70,7 +71,6 @@ export default function InterviewPage() {
     };
   }, []);
 
-  // Web Speech API Speech-to-Text setup
   const startRecording = () => {
     if (typeof window !== "undefined" && ("webkitSpeechRecognition" in window || "SpeechRecognition" in window)) {
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
@@ -86,8 +86,7 @@ export default function InterviewPage() {
         }
         setCurrentTranscript(text);
 
-        // Stream transcript chunk to WebSocket server
-        if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+        if (wsRef.current && wsRef.current.readyState === 1) {
           wsRef.current.send(JSON.stringify({ type: "transcript_chunk", text }));
         }
       };
@@ -114,7 +113,6 @@ export default function InterviewPage() {
   const handleNextQuestion = () => {
     if (!session || !session.questions) return;
 
-    // Save answer to transcript log
     const activeQ = session.questions[currentQuestionIdx];
     const logItem = {
       speaker: "candidate",
@@ -127,7 +125,7 @@ export default function InterviewPage() {
     setTranscriptLog(prev => [...prev, logItem]);
     setCurrentTranscript("");
 
-    if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+    if (wsRef.current && wsRef.current.readyState === 1) {
       wsRef.current.send(JSON.stringify({ type: "reset" }));
     }
 
@@ -140,14 +138,13 @@ export default function InterviewPage() {
 
   const handleFinishSession = async () => {
     stopRecording();
-    const finalSession = await saveSessionTranscript(
-      session.sessionId || Date.now(),
+    await saveSessionTranscript(
+      session?.sessionId || Date.now(),
       transcriptLog,
       telemetry,
       sessionSeconds
     );
 
-    // Save active session feedback state in localStorage for feedback page view
     if (typeof window !== "undefined") {
       localStorage.setItem("latest_session_transcript", JSON.stringify(transcriptLog));
       localStorage.setItem("latest_session_telemetry", JSON.stringify(telemetry));
@@ -161,57 +158,69 @@ export default function InterviewPage() {
   return (
     <div className="space-y-8">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="space-y-1">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-xs font-mono border border-orange-500/20">
-            <span>● Video / Voice Arena</span>
+      <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-soft flex flex-wrap items-center justify-between gap-4">
+        <div className="space-y-2">
+          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-xs font-mono font-bold border border-indigo-200">
+            <span>● Video &amp; Voice Arena</span>
           </div>
-          <h1 className="text-3xl font-extrabold text-zinc-50 tracking-tight">
-            Mock Interview <span className="text-orange-500">Arena</span>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            Mock Interview <span className="text-indigo-600">Arena</span>
           </h1>
         </div>
 
         <div className="flex items-center space-x-4">
-          <div className="text-xs font-mono text-zinc-400 bg-zinc-900 px-3 py-1.5 rounded-lg border border-zinc-800">
-            Session Time: <span className="text-orange-400 font-bold">{Math.floor(sessionSeconds / 60)}m {sessionSeconds % 60}s</span>
+          <div className="text-xs font-mono text-slate-600 bg-slate-100 px-3 py-1.5 rounded-xl border border-slate-200 font-bold">
+            Session Time: <span className="text-indigo-600 font-bold">{Math.floor(sessionSeconds / 60)}m {sessionSeconds % 60}s</span>
           </div>
 
-          <div className="text-xs font-mono px-3 py-1.5 rounded-lg border flex items-center space-x-1.5">
-            <span className={`w-2 h-2 rounded-full ${wsConnected ? 'bg-emerald-400' : 'bg-amber-400'}`} />
-            <span className="text-zinc-300">WS: {wsConnected ? "127.0.0.1:3001" : "Disconnected"}</span>
+          <div className="text-xs font-mono px-3 py-1.5 rounded-xl border border-slate-200 bg-white flex items-center space-x-1.5 font-bold">
+            <span className={`w-2.5 h-2.5 rounded-full ${wsConnected ? 'bg-emerald-500' : 'bg-amber-500'}`} />
+            <span className="text-slate-700">WS: {wsConnected ? "127.0.0.1:3001" : "Offline"}</span>
           </div>
         </div>
       </div>
 
-      {/* Main Video Arena Canvas */}
-      <VideoArena isRecording={isRecording} activeQuestion={activeQuestion} />
+      {/* Multi-Panel Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Main Video Arena & Telemetry Area (8 Cols) */}
+        <div className="lg:col-span-8 space-y-6">
+          <VideoArena isRecording={isRecording} activeQuestion={activeQuestion} />
 
-      {/* Live Telemetry HUD Overlay */}
-      <LiveHudTelemetry
-        telemetry={telemetry}
-        activeQuestion={activeQuestion}
-        currentTranscript={currentTranscript}
-      />
+          <LiveHudTelemetry
+            telemetry={telemetry}
+            activeQuestion={activeQuestion}
+            currentTranscript={currentTranscript}
+          />
 
-      {/* Controls Bar */}
-      <div className="flex items-center justify-between bg-zinc-900 border border-zinc-800 rounded-xl p-5 max-w-4xl mx-auto">
-        {!isRecording ? (
-          <Button variant="primary" size="lg" onClick={startRecording}>
-            ▶ Start Voice Session
-          </Button>
-        ) : (
-          <Button variant="secondary" size="lg" onClick={stopRecording}>
-            ⏸ Pause Speech
-          </Button>
-        )}
+          {/* Controls Bar */}
+          <div className="flex items-center justify-between bg-white border border-slate-200/90 rounded-2xl p-5 shadow-soft">
+            {!isRecording ? (
+              <Button variant="indigo" size="lg" onClick={startRecording}>
+                ▶ Start Voice Session
+              </Button>
+            ) : (
+              <Button variant="secondary" size="lg" onClick={stopRecording}>
+                ⏸ Pause Speech
+              </Button>
+            )}
 
-        <div className="flex items-center space-x-3">
-          <Button variant="outline" onClick={handleNextQuestion} disabled={!isRecording && !currentTranscript}>
-            Next Question →
-          </Button>
-          <Button variant="primary" onClick={handleFinishSession}>
-            Submit &amp; View STAR Feedback 🏆
-          </Button>
+            <div className="flex items-center space-x-3">
+              <Button variant="outline" onClick={handleNextQuestion} disabled={!isRecording && !currentTranscript}>
+                Next Question →
+              </Button>
+              <Button variant="orange" onClick={handleFinishSession}>
+                Submit &amp; View STAR Feedback 🏆
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* AI Chat Assistant (4 Cols) */}
+        <div className="lg:col-span-4 sticky top-20">
+          <ChatFeedbackPanel
+            contextTitle="Video Arena Coach"
+            contextData={{ activeQuestion, telemetry }}
+          />
         </div>
       </div>
     </div>

@@ -10,15 +10,15 @@ export default function Card({
 }) {
   return (
     <div
-      className={`bg-zinc-900 border border-zinc-800 rounded-xl p-6 transition-all duration-200 ${
-        glow ? "glow-orange border-orange-500/30" : "hover:border-zinc-700"
+      className={`bg-white border border-slate-200/90 rounded-2xl p-6 shadow-soft transition-all duration-200 ${
+        glow ? "ring-2 ring-orange-500/20 border-orange-400 shadow-panel" : "hover:border-slate-300 hover:shadow-md"
       } ${className}`}
     >
       {(title || action) && (
-        <div className="flex items-center justify-between mb-4 pb-3 border-b border-zinc-800/60">
+        <div className="flex items-center justify-between mb-4 pb-3 border-b border-slate-100">
           <div>
-            {title && <h3 className="text-lg font-bold text-zinc-100">{title}</h3>}
-            {subtitle && <p className="text-xs text-zinc-400 mt-0.5">{subtitle}</p>}
+            {title && <h3 className="text-base sm:text-lg font-bold text-slate-900">{title}</h3>}
+            {subtitle && <p className="text-xs text-slate-500 mt-0.5">{subtitle}</p>}
           </div>
           {action && <div>{action}</div>}
         </div>

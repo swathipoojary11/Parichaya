@@ -3,26 +3,28 @@
 export default function Button({
   children,
   onClick,
-  variant = "primary", // "primary" | "secondary" | "outline" | "ghost"
+  variant = "primary", // "primary" (orange) | "black" | "secondary" | "outline" | "ghost"
   size = "md", // "sm" | "md" | "lg"
   disabled = false,
   loading = false,
   className = "",
   type = "button"
 }) {
-  const baseStyles = "inline-flex items-center justify-center font-semibold rounded-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500/50 disabled:opacity-50 disabled:cursor-not-allowed";
+  const baseStyles = "inline-flex items-center justify-center font-bold rounded-xl transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500/30 disabled:opacity-50 disabled:cursor-not-allowed";
 
   const sizeStyles = {
     sm: "px-3 py-1.5 text-xs space-x-1.5",
-    md: "px-4 py-2.5 text-sm space-x-2",
+    md: "px-4.5 py-2.5 text-sm space-x-2",
     lg: "px-6 py-3.5 text-base space-x-3"
   };
 
   const variantStyles = {
-    primary: "bg-orange-500 hover:bg-orange-600 text-white shadow-lg shadow-orange-500/20 active:scale-[0.98]",
-    secondary: "bg-zinc-800 hover:bg-zinc-700 text-zinc-100 border border-zinc-700 active:scale-[0.98]",
-    outline: "border border-orange-500/40 text-orange-400 hover:bg-orange-500/10 active:scale-[0.98]",
-    ghost: "text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800/50"
+    primary: "bg-orange-500 hover:bg-orange-600 text-white shadow-md shadow-orange-500/20 active:scale-[0.98]",
+    orange: "bg-orange-500 hover:bg-orange-600 text-white shadow-md shadow-orange-500/20 active:scale-[0.98]",
+    black: "bg-slate-900 hover:bg-slate-800 text-white shadow-md active:scale-[0.98]",
+    secondary: "bg-slate-100 hover:bg-slate-200 text-slate-900 border border-slate-200 active:scale-[0.98]",
+    outline: "border-2 border-orange-500 text-orange-600 hover:bg-orange-50 active:scale-[0.98]",
+    ghost: "text-slate-600 hover:text-slate-900 hover:bg-slate-100"
   };
 
   return (
@@ -30,7 +32,7 @@ export default function Button({
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
-      className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant]} ${className}`}
+      className={`${baseStyles} ${sizeStyles[size]} ${variantStyles[variant] || variantStyles.primary} ${className}`}
     >
       {loading && (
         <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-current" fill="none" viewBox="0 0 24 24">

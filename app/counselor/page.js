@@ -3,6 +3,7 @@
 import { useState } from "react";
 import IntakeWizard from "@/components/counselor/IntakeWizard";
 import ResumePreview from "@/components/counselor/ResumePreview";
+import ChatFeedbackPanel from "@/components/feedback/ChatFeedbackPanel";
 import { synthesizeAndSaveResume } from "@/lib/services/counselorService";
 
 export default function CounselorPage() {
@@ -26,32 +27,45 @@ export default function CounselorPage() {
   };
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-8 max-w-full">
       {/* Header */}
-      <div className="space-y-2">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-xs font-mono border border-orange-500/20">
-          <span>● AI Counselor Mode</span>
+      <div className="bg-white border border-slate-200/80 rounded-3xl p-6 sm:p-8 shadow-soft space-y-2">
+        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-orange-50 text-orange-700 text-xs font-mono font-bold border border-orange-200">
+          <span>● AI Counselor Guided Intake</span>
         </div>
-        <h1 className="text-3xl font-extrabold text-zinc-50 tracking-tight">
+        <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
           Guided Resume <span className="text-orange-500">Counselor</span>
         </h1>
-        <p className="text-sm text-zinc-400 max-w-xl">
-          Don&apos;t have a resume? Answer 4 quick guided steps. Qwen2.5 3B will synthesize your background into an ATS-formatted resume with Google X-Y-Z impact bullets.
+        <p className="text-sm text-slate-600 max-w-2xl leading-relaxed">
+          Answer 4 quick guided steps to let local Qwen2.5 3B synthesize your project experience into Google X-Y-Z formula bullet points and generate an ATS-ready resume.
         </p>
       </div>
 
       {error && (
-        <div className="bg-red-500/10 border border-red-500/30 text-red-400 p-4 rounded-xl text-sm font-mono">
+        <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-2xl text-sm font-mono font-medium shadow-xs">
           {error}
         </div>
       )}
 
-      {/* Main Flow Render */}
-      {!resumeData ? (
-        <IntakeWizard onSubmit={handleIntakeSubmit} loading={loading} />
-      ) : (
-        <ResumePreview resume={resumeData} onReset={() => setResumeData(null)} />
-      )}
+      {/* Responsive Multi-Panel Grid Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        {/* Main Intake / Preview Area (8 Cols) */}
+        <div className="lg:col-span-8 space-y-6">
+          {!resumeData ? (
+            <IntakeWizard onSubmit={handleIntakeSubmit} loading={loading} />
+          ) : (
+            <ResumePreview resume={resumeData} onReset={() => setResumeData(null)} />
+          )}
+        </div>
+
+        {/* AI Chat Assistant Panel (4 Cols) */}
+        <div className="lg:col-span-4 lg:sticky lg:top-20">
+          <ChatFeedbackPanel
+            contextTitle="Counselor AI Coach"
+            contextData={{ resumeData, step: resumeData ? "Resume Synthesized" : "Intake Phase" }}
+          />
+        </div>
+      </div>
     </div>
   );
 }

@@ -20,7 +20,7 @@ export default function ReadinessMeter({
             cx={size / 2}
             cy={size / 2}
             r={radius}
-            stroke="#27272A"
+            stroke="#E2E8F0"
             strokeWidth={strokeWidth}
             fill="transparent"
           />
@@ -41,17 +41,17 @@ export default function ReadinessMeter({
 
         {/* Center Score Readout */}
         <div className="absolute flex flex-col items-center justify-center text-center space-y-0.5">
-          <span className="text-4xl font-extrabold text-zinc-50 font-mono tracking-tight">
+          <span className="text-4xl font-extrabold text-slate-900 font-mono tracking-tight">
             {normalizedScore}%
           </span>
-          <span className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-slate-400 font-bold">
             Readiness
           </span>
         </div>
       </div>
 
       {/* Level Label Badge Below Meter */}
-      <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-orange-500/10 text-orange-400 text-xs font-mono font-semibold border border-orange-500/20">
+      <div className="inline-flex items-center space-x-2 px-3.5 py-1 rounded-full bg-orange-50 text-orange-700 text-xs font-mono font-bold border border-orange-200">
         <span>★ Level: {level}</span>
       </div>
     </div>

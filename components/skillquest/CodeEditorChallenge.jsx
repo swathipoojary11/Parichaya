@@ -47,33 +47,33 @@ export default function CodeEditorChallenge({ challenge, onComplete }) {
   };
 
   return (
-    <Card glow className="space-y-6">
+    <Card glow className="space-y-6 border border-slate-200/90 shadow-soft">
       {/* Header */}
       <div className="space-y-1">
         <div className="flex items-center justify-between">
-          <span className="text-xs font-mono text-orange-400 uppercase font-bold tracking-wider">
+          <span className="text-xs font-mono text-indigo-600 uppercase font-bold tracking-wider">
             ⚙ TechQuest &bull; Interactive Code Runner
           </span>
           {execResult && (
-            <span className={`px-2.5 py-0.5 rounded text-xs font-mono font-bold border ${execResult.success ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20' : 'bg-red-500/10 text-red-400 border-red-500/20'}`}>
+            <span className={`px-2.5 py-0.5 rounded-full text-xs font-mono font-bold border ${execResult.success ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-rose-50 text-rose-700 border-rose-200'}`}>
               Score: {execResult.score}% ({execResult.passedCount}/{execResult.totalCount} Passed)
             </span>
           )}
         </div>
-        <h3 className="text-xl font-extrabold text-zinc-50">{title}</h3>
-        <p className="text-xs text-zinc-400 leading-relaxed">{description}</p>
+        <h3 className="text-xl font-extrabold text-slate-900">{title}</h3>
+        <p className="text-xs text-slate-600 leading-relaxed">{description}</p>
       </div>
 
       {/* Code Editor Box */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs font-mono text-zinc-400">
+        <div className="flex items-center justify-between text-xs font-mono text-slate-500 font-bold">
           <span>JavaScript Sandbox Code Editor</span>
-          <button onClick={() => setCode(initialCode)} className="hover:text-orange-400 transition-colors">
+          <button onClick={() => setCode(initialCode)} className="text-indigo-600 hover:underline">
             Reset Code ↺
           </button>
         </div>
 
-        <div className="relative rounded-xl border border-zinc-800 bg-zinc-950 overflow-hidden font-mono text-xs">
+        <div className="relative rounded-2xl border border-slate-800 bg-slate-950 overflow-hidden font-mono text-xs shadow-md">
           <textarea
             rows={10}
             value={code}
@@ -86,7 +86,7 @@ export default function CodeEditorChallenge({ challenge, onComplete }) {
 
       {/* Action Controls */}
       <div className="flex items-center justify-between">
-        <Button variant="primary" loading={running} onClick={handleRunCode}>
+        <Button variant="indigo" loading={running} onClick={handleRunCode}>
           ▶ Run Code &amp; Verify Test Cases
         </Button>
 
@@ -99,40 +99,40 @@ export default function CodeEditorChallenge({ challenge, onComplete }) {
 
       {/* AI Debugging Hint Box */}
       {aiHint && (
-        <div className="p-4 bg-orange-500/10 border border-orange-500/30 rounded-xl space-y-1 text-xs">
-          <div className="flex items-center space-x-2 text-orange-400 font-bold font-mono">
+        <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl space-y-1 text-xs text-amber-900">
+          <div className="flex items-center space-x-2 text-amber-700 font-bold font-mono">
             <span>🤖 AI Coach Hint:</span>
             <span>{aiHint.hintTitle}</span>
           </div>
-          <p className="text-zinc-300 leading-relaxed">{aiHint.hintMessage}</p>
+          <p className="leading-relaxed font-medium">{aiHint.hintMessage}</p>
         </div>
       )}
 
       {/* Test Case Results Grid */}
       {execResult && (
-        <div className="space-y-3 pt-4 border-t border-zinc-800">
-          <h4 className="text-xs font-mono uppercase text-zinc-400 font-bold">Test Case Evaluation Results</h4>
+        <div className="space-y-3 pt-4 border-t border-slate-100">
+          <h4 className="text-xs font-mono uppercase text-slate-500 font-bold">Test Case Evaluation Results</h4>
           <div className="grid grid-cols-1 gap-2.5">
             {execResult.results.map((res, idx) => (
               <div
                 key={idx}
-                className={`p-3 rounded-lg border text-xs font-mono flex items-center justify-between ${
+                className={`p-3 rounded-xl border text-xs font-mono flex items-center justify-between ${
                   res.passed
-                    ? "bg-emerald-950/20 border-emerald-500/30 text-emerald-300"
-                    : "bg-red-950/20 border-red-500/30 text-red-300"
+                    ? "bg-emerald-50 border-emerald-200 text-emerald-900"
+                    : "bg-rose-50 border-rose-200 text-rose-900"
                 }`}
               >
                 <div className="space-y-0.5">
                   <div className="flex items-center space-x-2">
                     <span className="font-bold">Test #{res.testCaseIndex}:</span>
-                    <span>Input: <code className="text-zinc-200">{res.input}</code></span>
+                    <span>Input: <code className="text-slate-800 font-bold">{res.input}</code></span>
                   </div>
-                  <div className="text-[11px] text-zinc-400">
-                    Expected: <code className="text-zinc-300">{res.expected}</code> | Got: <code className={res.passed ? "text-emerald-400" : "text-red-400"}>{res.actual}</code>
+                  <div className="text-[11px] text-slate-600">
+                    Expected: <code className="text-slate-800">{res.expected}</code> | Got: <code className={res.passed ? "text-emerald-700 font-bold" : "text-rose-700 font-bold"}>{res.actual}</code>
                   </div>
                 </div>
 
-                <span className={`px-2 py-0.5 rounded font-bold ${res.passed ? "bg-emerald-500/20 text-emerald-400" : "bg-red-500/20 text-red-400"}`}>
+                <span className={`px-2.5 py-0.5 rounded-full font-bold text-xs ${res.passed ? "bg-emerald-600 text-white" : "bg-rose-600 text-white"}`}>
                   {res.passed ? "✓ PASSED" : "✗ FAILED"}
                 </span>
               </div>
