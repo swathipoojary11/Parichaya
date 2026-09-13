@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Parichaya Interview Coach</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="console">
+
+    <!-- Header / status strip -->
+    <header class="strip">
+      <div class="orb-wrap">
+        <span id="orb" class="orb"></span>
+        <span id="statusText" class="statusText">Ready</span>
+      </div>
+      <div id="timer" class="timer">00:00</div>
+    </header>
+
+    <!-- Waveform -->
+    <canvas id="wave" class="wave" height="46"></canvas>
+
+    <!-- Live transcript -->
+    <section class="panel transcriptPanel">
+      <div class="panelLabel">Live transcript</div>
+      <div id="transcript" class="transcript" aria-live="polite">
+        <span class="placeholder">Press “Start” and begin speaking your answer…</span>
+      </div>
+    </section>
+
+    <!-- Stats grid -->
+    <section class="statsGrid">
+      <div class="gaugeCard">
+        <svg viewBox="0 0 120 120" class="ring">
+          <circle cx="60" cy="60" r="52" class="ringTrack" />
+          <circle id="confidenceRing" cx="60" cy="60" r="52" class="ringFill" />
+        </svg>
+        <div class="ringLabel">
+          <span id="confidenceValue">--</span>
+          <small>confidence</small>
+        </div>
+      </div>
+
+      <div class="miniStats">
+        <div class="miniStat">
+          <span class="miniStatValue" id="wpmValue">0</span>
+          <span class="miniStatLabel" id="wpmZoneLabel">words / min</span>
+        </div>
+        <div class="miniStat">
+          <span class="miniStatValue" id="fillerTotal">0</span>
+          <span class="miniStatLabel">filler words</span>
+        </div>
+        <div class="miniStat">
+          <span class="miniStatValue" id="wordCount">0</span>
+          <span class="miniStatLabel">words spoken</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Filler breakdown chips -->
+    <section class="panel">
+      <div class="panelLabel">Filler-word breakdown</div>
+      <div id="fillerChips" class="fillerChips"></div>
+    </section>
+
+    <!-- Controls -->
+    <section class="controls">
+      <button id="toggleBtn" class="btn btnPrimary">Start</button>
+      <button id="finishBtn" class="btn btnFinish" disabled>Finish interview</button>
+    </section>
+
+    <section class="controls secondaryControls">
+      <button id="historyBtn" class="btn btnGhost">Session history</button>
+      <button id="exportBtn" class="btn btnGhost" disabled>Export JSON</button>
+    </section>
+
+    <!-- History drawer -->
+    <section id="historyPanel" class="historyPanel hidden">
+      <div class="panelLabel">Past sessions <span id="historyClose" class="closeX">close</span></div>
+      <div id="historyList" class="historyList">
+        <span class="placeholder">No sessions saved yet.</span>
+      </div>
+    </section>
+
+    <footer class="footNote">
+      Evaluator target: <code>localhost:3000/api/evaluate-interview</code> · Everything else stays on this device.
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
