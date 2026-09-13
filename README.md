@@ -1,140 +1,123 @@
-# CareerForge AI — On-Device Career Guidance & Edge Interview Coach
+# AURA — AI-Powered Resume & Interview Coach
 
-> **Private, Fast, and 100% On-Device Placement Preparation Suite**  
-> Running local quantized Small Language Models (SLMs) over persistent WebSockets with zero cloud latency and total data residency.
-
----
-
-## 1. Project Overview & Problem Statement
-
-### The Problem
-College students and early-career job seekers face significant hurdles during placement drives:
-- **Generic & Expensive Guidance:** Commercial platforms lock tailored career coaching behind costly subscriptions.
-- **Privacy & Data Security Risks:** Traditional AI career tools upload private student resumes, transcripts, and personal contact info to external third-party cloud servers.
-- **The "Blank Page" Dilemma:** A significant majority of students lack a baseline resume and don't know how to translate coursework into industry-standard language.
-- **Disconnected Preparation:** Standard ATS checkers identify missing keywords but fail to provide structured, gamified practice (such as LeetCode problem patterns) to fix those gaps.
-- **High Interview Anxiety:** Students lack real-time feedback on speaking cadence, filler words (*"um"*, *"like"*), and technical structure (STAR method) during interviews.
-
-### What We Are Building
-**PARICHAYA** is an all-in-one, edge-computed career acceleration engine that operates completely offline on consumer hardware. It delivers:
-1. **Interactive AI Career Counselor:** A conversational intake assistant that interviews students without resumes and synthesizes their answers into an ATS-compliant resume.
-2. **Deterministic ATS Match Engine:** An audit pipeline comparing uploaded resumes against target Job Descriptions (JDs), highlighting matched keywords, missing competencies, and rewritten impact bullets (Google X-Y-Z formula).
-3. **Real-Time Voice Interview Arena & Chrome Extension:** A companion system that captures candidate audio via the Web Speech API and streams it over a local WebSocket to analyze speaking pace (WPM), track filler words, and critique answer quality.
-4. **Gamified Remediation Quests:** Automatic translation of identified skill gaps into unlockable missions with XP rewards, level badges (*Novice* → *Job-Ready*), and curated LeetCode coding patterns.
+> **Local-First, Privacy-Focused Career Acceleration Platform**  
+> Operating 100% on-device with zero cloud AI calls, local quantized Qwen2.5 3B inference via Ollama, client-side IndexedDB storage, and real-time speech telemetry over local WebSockets.
 
 ---
 
-## 2. Core Workflow & User Journey
-[START]
-                                     │
-               Does the student have an existing resume?
-                              /            \
-                       NO   /                \   YES
-                          /                    \
-                         ▼                      ▼
-             [1. AI Counselor Mode]      [2. ATS Audit Mode]
-             - 4-Step Guided Q&A         - PDF Dropzone (Client Parse)
-             - Captures Bio & Skills     - Ingests Target Job Description
-             - Outputs Structured JSON   - Calculates 0-100 Readiness Score
-             - Generates Clean Resume    - Computes Missing Skills & Diff
-                         │                      │
-                         └──────────┬───────────┘
-                                    │
-                                    ▼
-                         [3. Gamified Quest Hub]
-                         - Level 1: Placement Novice (0-49%)
-                         - Level 2: Tech Apprentice (50-74%)
-                         - Level 3: Job-Ready Slayer (75-100%)
-                         - Quests map to Curated LeetCode Patterns
-                         - Interactive Checkboxes trigger Confetti
-                                    │
-                                    ▼
-                    [4. Real-Time Interview Arena]
-                    (Via Web App OR Companion Chrome Extension)
-                    - Microphone taps audio via Web Speech API
-                    - Streams transcript chunks over ws://127.0.0.1:3001
-                    - Live HUD: WPM Speed + Filler-Word Counter
-                    - Evaluates Technical Depth & STAR Methodology
-                                    │
-                                  [END]
+## 1. Executive Summary & Core Value Proposition
 
-                                  ---
+College students and job seekers face major hurdles during placement preparation:
+- **Privacy & Security Risks:** Commercial AI tools upload private candidate resumes, contact details, and transcripts to third-party cloud servers.
+- **The "Blank Page" Dilemma:** Students without prior resumes struggle to translate coursework into industry-standard language.
+- **Disconnected Remediation:** Standard ATS checkers highlight missing keywords but fail to provide structured, gamified practice (such as LeetCode algorithm patterns) to fix those gaps.
+- **Interview Cadence & Anxiety:** Candidates lack feedback on speaking pace (WPM), filler words (*"um"*, *"like"*), and STAR methodology structure during live technical interviews.
 
-## 3. Technology Stack & Runtime Architecture
+**AURA** solves this with an edge-computed career suite running entirely on consumer laptops (16 GB RAM baseline):
+1. **Guided AI Counselor:** Step-by-step Q&A intake for candidates without resumes, synthesizing raw input into Google X-Y-Z bullet points (`"Accomplished [X] as measured by [Y], by doing [Z]"`).
+2. **ATS Match & Gap Analysis Engine:** Client-side PDF parser (`pdfjs-dist`) comparing resumes against target Job Descriptions, returning match score gauges, keyword diffs, and bullet rewrites.
+3. **Gamified Quest Hub:** Translates identified skill gaps into unlockable missions with XP rewards, level badges (*Placement Novice* -> *Job-Ready Slayer*), and confetti triggers.
+4. **Video / Voice Mock Interview Arena:** Live webcam canvas + Web Speech API audio stream connected over local WebSockets (`ws://127.0.0.1:3001`) for real-time WPM speed pacing and filler-word detection.
+5. **Post-Session STAR Feedback:** Multi-dimensional critique evaluating Situation, Task, Action, and Result methodology with actionable coaching tips.
+6. **LeetCode Pattern Recommendations:** Direct mapping of ATS gaps to 10 core algorithm patterns (Two Pointers, Sliding Window, Fast & Slow Pointers, Monotonic Stack, Top K Elements, Binary Search, Graph BFS/DFS, Backtracking, Dynamic Programming, Trie).
+7. **Chrome Companion Extension (MV3):** Post-session speech cadence console with strict guardrails: **Zero live answer assistance during actual interviews**.
 
-| Layer | Technology | Version / Configuration | Role in Project |
+---
+
+## 2. Technology Stack
+
+| Layer | Choice | Configuration | Role in Project |
 | :--- | :--- | :--- | :--- |
-| **Frontend Framework** | **Next.js (App Router)** |Java Script | Full-stack application UI, client-side routing, and static assets. |
-| **Styling & UI Tokens** | **Tailwind CSS** | `v3.4+` | Utility-first styling implementing the unified dark/orange theme. |
-| **Icons & Micro-Interactions** | **Lucide React & Canvas-Confetti** | Latest | Minimalist iconography and gamification victory triggers. |
-| **Real-Time Transport** | **WebSockets (`ws`)** | `Port 3001` | Full-duplex streaming for transcript chunks, pacing stats, and evaluation. |
-| **Document Parsing** | **`pdfjs-dist`** | Client-side worker | In-browser PDF text extraction (avoids sending raw files to servers). |
-| **Speech Processing** | **Web Speech API** | Chromium Native | Free, zero-latency Speech-to-Text (`webkitSpeechRecognition`). |
-| **Browser Extension** | **Chrome Manifest V3** | Manifest `v3` | Live microphone tap with offscreen audio routing to local WebSocket. |
-| **Edge SLM Engine** | **Ollama** | Local daemon (`Port 11434`) | High-performance C++ execution engine for local language models. |
-| **Primary Evaluator Model** | **`qwen2.5:3b`** | Q4_K_M Quantized (~2.2 GB RAM) | Primary model for strict JSON formatting, code analysis, and interview evaluation. |
-| **Lightweight Fallback Model** | **`llama3.2:1b`** | Q4_K_M Quantized (~1.3 GB RAM) | Fast model for low-resource environments and high-speed chat parsing. |
-| **Development Platform** | **Google Antigravity** | Agentic IDE | Workspace orchestration, automated scaffolding, and agent task runs. |
+| **Frontend** | **Next.js (App Router)** | JavaScript ES6+ (No TS/TSX) | Full-stack application UI, client routing, static pages. |
+| **Styling** | **Tailwind CSS** | `v3.4+` | Electric Orange (`#F97316`) & Pitch Black (`#09090B`) theme design tokens. |
+| **Local AI Engine** | **Ollama** | Local daemon (`http://127.0.0.1:11434`) | High-performance C++ execution engine for local SLMs. |
+| **Local Model** | **`qwen2.5:3b`** | Quantized Q4_K_M (~2.2 GB RAM footprint) | Single-purpose structured JSON prompt execution. |
+| **Storage Layer** | **IndexedDB (`aura_db`)** | Client-Side Browser Storage (v1) | 7 Object stores: `profiles`, `resumes`, `job_descriptions`, `mock_sessions`, `session_feedback`, `quests`, `user_stats`. |
+| **Real-Time Comms** | **WebSockets (`ws`)** | `Port 3001` | Full-duplex audio transcript streaming & WPM telemetry. |
+| **Document Parsing** | **`pdfjs-dist`** | Client-side worker | In-browser PDF text extraction (zero remote server upload). |
+| **Browser Extension** | **Chrome Manifest V3** | Manifest `v3` | Post-session speech metrics (pace, filler words). |
 
 ---
 
-## 4. Hardware Baseline & Operational Bounds
-
-All software is configured to operate smoothly within the following physical hardware profile:
-- **Host System:** HP Victus Laptop
-- **Host Memory:** 16 GB Unified RAM
-- **Operating System:** Windows 11 / WSL2
-- **Network Dependency:** **Zero (100% Offline Capable).** No external API keys or cloud connections allowed during evaluation.
-
----
-
-## 5. Unified Design System: High-Contrast Industrial Orange
-
-To maintain a cohesive look, all team members must adhere strictly to these UI styling tokens. Do not use random blues, purples, or unapproved palettes.
-
-### 5.1 Color Palette & Token Reference
-
-| Role | Color Name | Hex Code | Tailwind Utility Class | Application |
-| :--- | :--- | :--- | :--- | :--- |
-| **Primary Brand** | Electric Orange | `#F97316` | `bg-orange-500` / `text-orange-500` | Primary buttons, active tabs, level badges, focus borders. |
-| **Accent & Glow** | Bright Amber | `#FB923C` | `bg-orange-400` / `text-orange-400` | Hover states, glowing rings, circular progress strokes. |
-| **Base Background** | Pitch Black | `#09090B` | `bg-zinc-950` | Global page canvas background. |
-| **Card Surface** | Deep Charcoal | `#18181B` | `bg-zinc-900` | Form cards, dialog modals, interactive containers. |
-| **Dividers & Borders** | Slate Zinc | `#27272A` | `border-zinc-800` | Subtle structural rules, input field borders. |
-| **Text Primary** | Pure White | `#FAFAFA` | `text-zinc-50` | Main titles, user input text, score values. |
-| **Text Secondary** | Muted Slate | `#A1A1AA` | `text-zinc-400` | Descriptions, labels, timestamps, metadata. |
-| **Success / XP** | Emerald / Gold | `#10B981` / `#F59E0B` | `text-emerald-400` / `text-amber-400` | Completed quests, XP counters, passing indicators. |
-
-### 5.2 Standard UI Component Rules
-
-- **Buttons:**
-  - *Primary Button:* `bg-orange-500 hover:bg-orange-600 text-zinc-950 font-semibold px-5 py-2.5 rounded-lg transition active:scale-95 flex items-center gap-2 shadow-lg shadow-orange-500/20` (Always pure black text on bright orange).
-  - *Secondary Button:* `bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-medium px-4 py-2 rounded-lg border border-zinc-700 transition`
-- **Cards & Panels:**
-  - `bg-zinc-900/80 border border-zinc-800 rounded-xl p-5 backdrop-blur-sm`
-- **Quest Cards:**
-  - *Pending:* `border border-zinc-800 bg-zinc-900/50 p-4 rounded-lg flex items-start gap-3 hover:border-orange-500/40 transition cursor-pointer`
-  - *Completed:* `border border-emerald-500/30 bg-emerald-950/10 p-4 rounded-lg flex items-start gap-3 opacity-80`
-- **Typography:**
-  - Headings: `font-bold tracking-tight text-zinc-50`
-  - Metrics / Code: `font-mono text-orange-400`
-- **Zero-Guide UX Principle:**
-  - Buttons and interactive elements must describe their explicit action. Never use vague labels like *"Submit"* or *"Process"*. Use *"Audit Resume (Zero Cloud Upload)"*, *"Start Voice Session"*, or *"Generate Tailored Resume"*.
-
----
-
-Local Setup & Startup Protocol
+## 3. Quick Start & Local Execution Guide
 
 ### Prerequisites
-1. **Node.js (v18+ LTS)** installed.
-2. **Ollama for Windows** installed and running in the background.
+1. **Node.js:** `v18.0.0` or higher installed.
+2. **Ollama:** Installed locally with model `qwen2.5:3b`:
+   ```bash
+   ollama pull qwen2.5:3b
+   ```
 
-### Step 1: Model Pull
-Open PowerShell and download the designated models:
-```bash
-# Primary Model: Technical depth and strict JSON adherence
-ollama pull qwen2.5:3b
+### Installation Steps
 
-# Fallback Model: Ultra-lightweight execution
-ollama pull llama3.2:1b
+1. **Clone Repository & Navigate to Workspace:**
+   ```bash
+   cd Parichaya
+   ```
 
+2. **Install Dependencies:**
+   ```bash
+   npm install
+   ```
+
+3. **Start Local Telemetry WebSocket Server:**
+   ```bash
+   node mock-server/server.js
+   ```
+   *(Listening on `ws://127.0.0.1:3001`)*
+
+4. **Launch Next.js Application:**
+   ```bash
+   npm run dev
+   ```
+   *(Application running on `http://localhost:3000`)*
+
+5. **Production Build Verification:**
+   ```bash
+   npm run build
+   ```
+
+---
+
+## 4. Repository Structure
+
+```
+Parichaya
+ ├── app/                      # Next.js App Router Pages
+ │    ├── page.js              # Home Dashboard & Local System Health Status
+ │    ├── counselor/           # AI Resume Counselor Intake Wizard
+ │    ├── ats-audit/           # Client-Side PDF Upload & ATS Gap Audit
+ │    ├── roadmap/             # Gamified Quest Hub & Readiness Score
+ │    ├── interview/           # Video / Voice Mock Interview Arena
+ │    │    └── feedback/       # Post-Session STAR Feedback Report
+ │    └── resources/           # LeetCode DSA Pattern Recommendations
+ ├── components/               # Reusable UI & Feature Components
+ │    ├── ui/                  # Button, Card, QuestCard, ReadinessMeter
+ │    ├── counselor/           # IntakeWizard, ResumePreview
+ │    ├── ats/                 # PdfDropzone, AtsReportView
+ │    ├── roadmap/             # LevelBadge, QuestHub
+ │    ├── interview/           # VideoArena, LiveHudTelemetry, FeedbackReportView
+ │    └── resources/           # PatternCard, ResourceGrid
+ ├── lib/                      # Core Logic & Infrastructure Services
+ │    ├── db.js                # IndexedDB aura_db v1 CRUD Helpers
+ │    ├── ollama.js            # Ollama Qwen2.5 3B Local AI Client
+ │    └── services/            # Counselor, ATS, Interview, Feedback, Gamification, Resource Services
+ ├── data/                     # Static Datasets (dsa_patterns, rubrics, role_skill_maps)
+ ├── extension/                # Chrome Manifest V3 Companion Extension Package
+ ├── mock-server/              # WebSocket Telemetry Server (Port 3001)
+ ├── ARCHITECTURE.md           # Detailed 7-Layer Architecture Blueprint
+ ├── DATA_MODEL.md             # IndexedDB Stores & JSON Schemas
+ ├── RESOURCE_GUIDE.md         # Static Datasets & Quest Mapping Rules
+ ├── WORKFLOW.md               # User Journeys & Feature Workflows
+ ├── AI_INTEGRATION.md         # Ollama Qwen2.5 3B Prompt Specifications
+ ├── PROGRESS.md               # Master Task Completion Log
+ └── IMPLEMENTATION_PLAN.md    # Scope Freeze & Milestone Tracker
+```
+
+---
+
+## 5. Security & Privacy Guardrails
+
+1. **100% Data Residency:** Resumes, transcripts, candidate profiles, and evaluation feedback strictly reside inside browser IndexedDB.
+2. **Zero External Network Dependencies:** No feature connects to remote cloud LLMs or tracking services.
+3. **Chrome Extension Mandate:** Post-session analytics only (pacing, filler words). Live answer assistance is strictly prohibited.

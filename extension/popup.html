@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Parichaya Interview Coach</title>
+  <title>AURA Post-Session Speech Companion</title>
   <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
@@ -22,9 +22,9 @@
 
     <!-- Live transcript -->
     <section class="panel transcriptPanel">
-      <div class="panelLabel">Live transcript</div>
+      <div class="panelLabel">Live Speech Stream</div>
       <div id="transcript" class="transcript" aria-live="polite">
-        <span class="placeholder">Press “Start” and begin speaking your answer…</span>
+        <span class="placeholder">Press “Start” and begin speaking into microphone…</span>
       </div>
     </section>
 
@@ -65,12 +65,12 @@
 
     <!-- Controls -->
     <section class="controls">
-      <button id="toggleBtn" class="btn btnPrimary">Start</button>
-      <button id="finishBtn" class="btn btnFinish" disabled>Finish interview</button>
+      <button id="toggleBtn" class="btn btnPrimary">Start Session</button>
+      <button id="finishBtn" class="btn btnFinish" disabled>Finish Session</button>
     </section>
 
     <section class="controls secondaryControls">
-      <button id="historyBtn" class="btn btnGhost">Session history</button>
+      <button id="historyBtn" class="btn btnGhost">Session History</button>
       <button id="exportBtn" class="btn btnGhost" disabled>Export JSON</button>
     </section>
 
@@ -83,7 +83,7 @@
     </section>
 
     <footer class="footNote">
-      Evaluator target: <code>localhost:3000/api/evaluate-interview</code> · Everything else stays on this device.
+      AURA Local IPC: <code>ws://127.0.0.1:3001</code> &bull; 🔒 Post-Session Metrics Only &bull; Zero Live Answer Assistance
     </footer>
   </div>
 

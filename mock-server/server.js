@@ -1,62 +1,73 @@
 /**
- * Minimal, dependency-free mock of POST /api/evaluate-interview
- * Run:  node server.js
- * Listens on http://localhost:3000
- *
- * This exists purely so Member 3's extension has a real endpoint to
- * dispatch the transcript payload to while the rest of the backend
- * is being built by other members. Swap this out once the real
- * evaluation service exists.
+ * Local WebSocket Telemetry Server for Video/Voice Mock Interview Arena
+ * Runs on port 3001
+ * Tracks real-time WPM pacing and counts filler words.
  */
-const http = require("http");
 
-const server = http.createServer((req, res) => {
-  // CORS: the request comes from a chrome-extension:// page context.
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+const { WebSocketServer } = require("ws");
 
-  if (req.method === "OPTIONS") {
-    res.writeHead(204);
-    return res.end();
-  }
+const PORT = 3001;
+const wss = new WebSocketServer({ port: PORT });
 
-  if (req.method === "POST" && req.url === "/api/evaluate-interview") {
-    let body = "";
-    req.on("data", (chunk) => (body += chunk));
-    req.on("end", () => {
-      let payload;
-      try {
-        payload = JSON.parse(body);
-      } catch {
-        res.writeHead(400, { "Content-Type": "application/json" });
-        return res.end(JSON.stringify({ error: "Invalid JSON" }));
+console.log(`[AURA Telemetry] WebSocket server listening on ws://127.0.0.1:${PORT}`);
+
+const FILLER_WORDS = ["um", "uh", "like", "you know", "basically", "actually", "right", "honestly"];
+
+wss.on("connection", (ws) => {
+  console.log("[AURA Telemetry] Client connected to video/voice telemetry stream.");
+
+  let wordHistory = [];
+  let startTime = Date.now();
+  let fillerWordCounts = {};
+  FILLER_WORDS.forEach(w => fillerWordCounts[w] = 0);
+
+  ws.on("message", (message) => {
+    try {
+      const data = JSON.parse(message.toString());
+
+      if (data.type === "reset") {
+        wordHistory = [];
+        startTime = Date.now();
+        FILLER_WORDS.forEach(w => fillerWordCounts[w] = 0);
+        return;
       }
 
-      console.log("\n--- Interview session received ---");
-      console.log(`Duration:   ${payload.durationSeconds}s`);
-      console.log(`Avg WPM:    ${payload.averageWpm}`);
-      console.log(`Fillers:    ${payload.fillerTotal}`);
-      console.log(`Confidence: ${payload.confidenceScore}`);
-      console.log("-----------------------------------\n");
+      if (data.type === "transcript_chunk" && data.text) {
+        const text = data.text.trim();
+        const words = text.toLowerCase().split(/\s+/).filter(Boolean);
+        const now = Date.now();
+        const elapsedMinutes = (now - startTime) / 60000;
 
-      const feedback =
-        payload.confidenceScore >= 75
-          ? "Strong pacing and minimal filler words. Keep this up."
-          : payload.confidenceScore >= 45
-          ? "Decent answer — watch your pace and trim filler words next round."
-          : "Slow down, pause instead of using filler words, and try again.";
+        // Count filler words
+        words.forEach(word => {
+          const cleanWord = word.replace(/[^a-z]/g, "");
+          if (FILLER_WORDS.includes(cleanWord)) {
+            fillerWordCounts[cleanWord] = (fillerWordCounts[cleanWord] || 0) + 1;
+          }
+        });
 
-      res.writeHead(200, { "Content-Type": "application/json" });
-      res.end(JSON.stringify({ received: true, feedback }));
-    });
-    return;
-  }
+        wordHistory.push(...words);
+        const totalWords = wordHistory.length;
+        const currentWpm = elapsedMinutes > 0 ? Math.round(totalWords / elapsedMinutes) : 140;
+        const totalFillers = Object.values(fillerWordCounts).reduce((a, b) => a + b, 0);
 
-  res.writeHead(404, { "Content-Type": "application/json" });
-  res.end(JSON.stringify({ error: "Not found" }));
-});
+        // Send telemetry update to client
+        ws.send(JSON.stringify({
+          type: "telemetry_update",
+          wpm: currentWpm,
+          totalWords,
+          totalFillers,
+          fillerWordCounts,
+          latestTranscript: text,
+          timestamp: new Date().toISOString()
+        }));
+      }
+    } catch (err) {
+      console.error("[AURA Telemetry] Error processing socket message:", err);
+    }
+  });
 
-server.listen(3000, () => {
-  console.log("Mock evaluator listening on http://localhost:3000");
+  ws.on("close", () => {
+    console.log("[AURA Telemetry] Client disconnected.");
+  });
 });

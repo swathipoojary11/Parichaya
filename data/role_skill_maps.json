@@ -1,0 +1,34 @@
+{
+  "version": "1.0.0",
+  "description": "Standardized skill requirements by software engineering track for ATS audit matching and gap detection.",
+  "roles": [
+    {
+      "roleId": "frontend_developer",
+      "title": "Frontend Developer",
+      "coreSkills": ["JavaScript", "HTML", "CSS", "React", "Next.js", "Tailwind CSS", "REST APIs"],
+      "advancedSkills": ["TypeScript", "WebSockets", "State Management", "Web Vitals", "Unit Testing"],
+      "softSkills": ["UI/UX Sense", "Component Design", "Cross-Browser Compatibility"]
+    },
+    {
+      "roleId": "backend_developer",
+      "title": "Backend Developer",
+      "coreSkills": ["Node.js", "Python", "SQL", "PostgreSQL", "REST APIs", "Git", "Data Structures"],
+      "advancedSkills": ["Microservices", "Redis", "Docker", "WebSockets", "Database Indexing", "System Design"],
+      "softSkills": ["API Security", "Database Normalization", "Scalability Thinking"]
+    },
+    {
+      "roleId": "fullstack_engineer",
+      "title": "Full Stack Engineer",
+      "coreSkills": ["JavaScript", "React", "Next.js", "Node.js", "SQL", "Tailwind CSS", "REST APIs"],
+      "advancedSkills": ["WebSockets", "IndexedDB", "Docker", "Authentication", "CI/CD", "System Architecture"],
+      "softSkills": ["End-to-End Delivery", "Technical Communication", "Product Mindset"]
+    },
+    {
+      "roleId": "ai_ml_engineer",
+      "title": "AI / ML Engineer",
+      "coreSkills": ["Python", "PyTorch", "TensorFlow", "Scikit-Learn", "SQL", "Data Preprocessing"],
+      "advancedSkills": ["Ollama", "LLMs", "Quantization", "Model Fine-Tuning", "Vector Databases", "Prompt Engineering"],
+      "softSkills": ["Experimental Rigor", "Model Evaluation", "Math & Statistics"]
+    }
+  ]
+}

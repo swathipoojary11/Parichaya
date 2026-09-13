@@ -1,0 +1,45 @@
+{
+  "version": "1.0.0",
+  "description": "Evaluation rubrics for video/voice mock interview feedback, WPM cadence, filler word analysis, and STAR methodology.",
+  "starRubric": {
+    "situation": {
+      "weight": 0.20,
+      "criteria": "Sets background context clearly without excessive ramblings. Specifies team size, project context, or company scenario."
+    },
+    "task": {
+      "weight": 0.20,
+      "criteria": "Explicitly defines the specific problem, goal, deadline, or engineering challenge to be solved."
+    },
+    "action": {
+      "weight": 0.35,
+      "criteria": "Details specific personal contributions, technologies selected, architectural decisions, and steps taken (uses 'I' instead of vague 'We')."
+    },
+    "result": {
+      "weight": 0.25,
+      "criteria": "Provides concrete, quantifiable metrics and business/technical impact (e.g. 'reduced latency by 35%', 'handled 10k DAU')."
+    }
+  },
+  "speechMetrics": {
+    "cadenceWpm": {
+      "optimalRange": { "min": 130, "max": 160 },
+      "tooSlowThreshold": 110,
+      "tooFastThreshold": 180,
+      "feedback": {
+        "tooSlow": "Speaking pace is below 110 WPM. Try to convey your ideas with more energy and steady momentum.",
+        "optimal": "Excellent speaking pace (130-160 WPM). Clear cadence and easy for interviewers to follow.",
+        "tooFast": "Speaking pace exceeds 180 WPM. Pause deliberately at key points so interviewers digest complex details."
+      }
+    },
+    "fillerWords": {
+      "targetLimitPerSession": 3,
+      "flaggedTokens": ["um", "uh", "like", "you know", "basically", "actually", "right", "honestly"],
+      "penaltyPerOccurrence": 3
+    }
+  },
+  "dimensionWeights": {
+    "relevance": 0.30,
+    "technicalDepth": 0.30,
+    "clarity": 0.20,
+    "confidence": 0.20
+  }
+}

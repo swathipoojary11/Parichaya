@@ -1,15 +1,15 @@
 {
   "manifest_version": 3,
-  "name": "Parichaya — Interview Coach",
+  "name": "AURA — Post-Session Speech Companion",
   "version": "1.0.0",
-  "description": "On-device mock-interview coach: live transcript, speaking-pace tracking, filler-word detection, and a real-time confidence score. Sends nothing anywhere except your own local evaluator.",
+  "description": "On-device post-session speech cadence, WPM tracking, and filler-word detection. Strictly post-session analytics with zero live interview answer assistance.",
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Parichaya Interview Coach"
+    "default_title": "AURA Speech Companion"
   },
   "background": {
     "service_worker": "background.js"
   },
   "permissions": ["storage", "downloads"],
-  "host_permissions": ["http://localhost:3000/*"]
+  "host_permissions": ["http://localhost:3000/*", "http://127.0.0.1:3001/*"]
 }
