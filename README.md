@@ -64,7 +64,7 @@ College students and early-career job seekers face significant hurdles during pl
 
 | Layer | Technology | Version / Configuration | Role in Project |
 | :--- | :--- | :--- | :--- |
-| **Frontend Framework** | **Next.js (App Router)** | `v15+` (TypeScript) | Full-stack application UI, client-side routing, and static assets. |
+| **Frontend Framework** | **Next.js (App Router)** |Java Script | Full-stack application UI, client-side routing, and static assets. |
 | **Styling & UI Tokens** | **Tailwind CSS** | `v3.4+` | Utility-first styling implementing the unified dark/orange theme. |
 | **Icons & Micro-Interactions** | **Lucide React & Canvas-Confetti** | Latest | Minimalist iconography and gamification victory triggers. |
 | **Real-Time Transport** | **WebSockets (`ws`)** | `Port 3001` | Full-duplex streaming for transcript chunks, pacing stats, and evaluation. |
@@ -82,7 +82,7 @@ College students and early-career job seekers face significant hurdles during pl
 
 All software is configured to operate smoothly within the following physical hardware profile:
 - **Host System:** HP Victus Laptop
-- **Host Memory:** 8 GB Unified RAM
+- **Host Memory:** 16 GB Unified RAM
 - **Operating System:** Windows 11 / WSL2
 - **Network Dependency:** **Zero (100% Offline Capable).** No external API keys or cloud connections allowed during evaluation.
 
