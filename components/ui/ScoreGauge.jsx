@@ -1,17 +1,8 @@
 'use client';
 
 import React from 'react';
-import { RankTier } from '@/types';
 
-export interface ScoreGaugeProps {
-  score: number; // 0 to 100
-  rankTier?: RankTier | string;
-  size?: number;
-  strokeWidth?: number;
-  label?: string;
-}
-
-export const ScoreGauge: React.FC<ScoreGaugeProps> = ({
+export const ScoreGauge = ({
   score,
   rankTier = 'Job-Ready',
   size = 190,

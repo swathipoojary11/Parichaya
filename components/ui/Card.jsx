@@ -2,20 +2,13 @@
 
 import React from 'react';
 
-export interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
-  children: React.ReactNode;
-  variant?: 'default' | 'glow' | 'accent';
-  noPadding?: boolean;
-}
-
-export const Card: React.FC<CardProps> = ({
+export const Card = ({
   children,
   variant = 'default',
   noPadding = false,
   className = '',
   ...props
 }) => {
-  // Component B spec: bg-zinc-900/80 border border-zinc-800 rounded-xl p-5 shadow-sm hover:border-zinc-700 transition-colors
   let variantStyles = 'bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700';
 
   if (variant === 'glow') {

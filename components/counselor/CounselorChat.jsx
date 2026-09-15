@@ -1,9 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import { UserProfile, CounselorChatMessage } from '@/types';
-import { Button } from '@/components/ui/Button';
-import { Card } from '@/components/ui/Card';
+import { Button } from '../ui/Button';
+import { Card } from '../ui/Card';
 import {
   Bot,
   User,
@@ -19,31 +18,24 @@ import {
   Code
 } from 'lucide-react';
 
-export interface CounselorChatProps {
-  userProfile: UserProfile;
-  onUpdateProfile: (updated: Partial<UserProfile>) => void;
-  onCompleteStep?: (stepId: number) => void;
-  onAwardXp?: (amount: number, reason: string) => void;
-}
-
-export const CounselorChat: React.FC<CounselorChatProps> = ({
+export const CounselorChat = ({
   userProfile,
   onUpdateProfile,
   onCompleteStep,
   onAwardXp,
 }) => {
-  const [currentStep, setCurrentStep] = useState<number>(1);
-  const [isTyping, setIsTyping] = useState<boolean>(false);
-  const [showResumePreview, setShowResumePreview] = useState<boolean>(true);
+  const [currentStep, setCurrentStep] = useState(1);
+  const [isTyping, setIsTyping] = useState(false);
+  const [showResumePreview, setShowResumePreview] = useState(true);
 
   // Form States
-  const [step1Role, setStep1Role] = useState(userProfile.targetRole || 'Full Stack Engineer (Campus Placement)');
-  const [step1Industry, setStep1Industry] = useState(userProfile.targetIndustry || 'FinTech & Cloud Systems');
+  const [step1Role, setStep1Role] = useState(userProfile?.targetRole || 'Full Stack Engineer (Campus Placement)');
+  const [step1Industry, setStep1Industry] = useState(userProfile?.targetIndustry || 'FinTech & Cloud Systems');
 
-  const [step2Degree, setStep2Degree] = useState(userProfile.degree || 'B.Tech in Computer Science & Engineering');
-  const [step2Institution, setStep2Institution] = useState(userProfile.institution || 'National Institute of Technology');
-  const [step2Gpa, setStep2Gpa] = useState(userProfile.gpa || '8.8 / 10.0 CGPA');
-  const [step2GradYear, setStep2GradYear] = useState(userProfile.graduationYear || '2026');
+  const [step2Degree, setStep2Degree] = useState(userProfile?.degree || 'B.Tech in Computer Science & Engineering');
+  const [step2Institution, setStep2Institution] = useState(userProfile?.institution || 'National Institute of Technology');
+  const [step2Gpa, setStep2Gpa] = useState(userProfile?.gpa || '8.8 / 10.0 CGPA');
+  const [step2GradYear, setStep2GradYear] = useState(userProfile?.graduationYear || '2026');
 
   // Step 3: Google X-Y-Z formula inputs
   const [projTitle, setProjTitle] = useState('Distributed Task Scheduler & Queue System');
@@ -67,7 +59,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
   ];
 
   // Chat message trajectory
-  const [messages, setMessages] = useState<CounselorChatMessage[]>([
+  const [messages, setMessages] = useState([
     {
       id: 'msg-1',
       sender: 'ai',
@@ -77,7 +69,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
     },
   ]);
 
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesEndRef = useRef(null);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -87,7 +79,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
     scrollToBottom();
   }, [messages, isTyping]);
 
-  const addMessage = (sender: 'ai' | 'user', text: string, stepId?: number) => {
+  const addMessage = (sender, text, stepId) => {
     setMessages((prev) => [
       ...prev,
       {
@@ -100,7 +92,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
     ]);
   };
 
-  const handleStepSelect = (stepId: number) => {
+  const handleStepSelect = (stepId) => {
     setCurrentStep(stepId);
     const stepObj = stepsList.find((s) => s.id === stepId);
     if (!stepObj) return;
@@ -117,7 +109,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
   };
 
   // Handle Step 1 Submission
-  const handleStep1Submit = (e: React.FormEvent) => {
+  const handleStep1Submit = (e) => {
     e.preventDefault();
     if (!step1Role.trim()) return;
 
@@ -141,7 +133,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
   };
 
   // Handle Step 2 Submission
-  const handleStep2Submit = (e: React.FormEvent) => {
+  const handleStep2Submit = (e) => {
     e.preventDefault();
     const userMsgText = `Degree: ${step2Degree} | College: ${step2Institution} | CGPA: ${step2Gpa} (${step2GradYear})`;
     addMessage('user', userMsgText, 2);
@@ -168,7 +160,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
   };
 
   // Handle Step 3 Submission
-  const handleStep3Submit = (e: React.FormEvent) => {
+  const handleStep3Submit = (e) => {
     e.preventDefault();
     const fullXYZDescription = `Accomplished ${projX}, as measured by ${projY}, by doing ${projZ}.`;
     const techArray = projTech.split(',').map((t) => t.trim()).filter(Boolean);
@@ -180,7 +172,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
         descriptionXYZ: fullXYZDescription,
         techStack: techArray,
       },
-      ...userProfile.projects,
+      ...(userProfile?.projects || []),
     ];
 
     addMessage(
@@ -191,7 +183,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
 
     onUpdateProfile({
       projects: updatedProjects,
-      techSkills: Array.from(new Set([...userProfile.techSkills, ...techArray])),
+      techSkills: Array.from(new Set([...(userProfile?.techSkills || []), ...techArray])),
     });
 
     if (onAwardXp) onAwardXp(75, 'Completed Step 3: Google X-Y-Z Formula');
@@ -210,7 +202,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
   };
 
   // Handle Step 4 Submission
-  const handleStep4Submit = (e: React.FormEvent) => {
+  const handleStep4Submit = (e) => {
     e.preventDefault();
     const newExp = {
       id: `exp-${Date.now()}`,
@@ -220,7 +212,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
       highlights: [expHighlights],
     };
 
-    const updatedExps = [newExp, ...userProfile.experiences];
+    const updatedExps = [newExp, ...(userProfile?.experiences || [])];
 
     addMessage(
       'user',
@@ -312,7 +304,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
             </button>
           </div>
 
-          {/* Messages Trajectory Feed */}
+          {/* Messages Feed */}
           <div className="flex-1 p-4 overflow-y-auto space-y-4 scrollbar-thin">
             {messages.map((msg) => (
               <div
@@ -359,7 +351,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
             <div ref={messagesEndRef} />
           </div>
 
-          {/* Step Form Input Area */}
+          {/* Form Input Area */}
           <div className="p-4 bg-zinc-950 border-t border-zinc-800">
             {currentStep === 1 && (
               <form onSubmit={handleStep1Submit} className="space-y-3">
@@ -572,7 +564,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
                   Candidate Profile
                 </h4>
                 <p className="text-[11px] font-mono text-orange-400 mt-0.5">
-                  Target: {userProfile.targetRole || 'Full Stack Engineer'} ({userProfile.targetIndustry || 'Tech'})
+                  Target: {userProfile?.targetRole || 'Full Stack Engineer'} ({userProfile?.targetIndustry || 'Tech'})
                 </p>
                 <p className="text-[10px] text-zinc-500 mt-1">
                   On-Device Zero-Cloud Encrypted Digest
@@ -587,12 +579,12 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
                 </div>
                 <div className="space-y-1">
                   <div className="flex justify-between font-semibold text-zinc-200">
-                    <span>{userProfile.degree || 'B.Tech CSE'}</span>
-                    <span className="font-mono text-zinc-400">{userProfile.graduationYear || '2026'}</span>
+                    <span>{userProfile?.degree || 'B.Tech CSE'}</span>
+                    <span className="font-mono text-zinc-400">{userProfile?.graduationYear || '2026'}</span>
                   </div>
                   <div className="flex justify-between text-[11px] text-zinc-400">
-                    <span>{userProfile.institution || 'NIT Campus'}</span>
-                    <span className="font-mono text-emerald-400">{userProfile.gpa || '8.8 CGPA'}</span>
+                    <span>{userProfile?.institution || 'NIT Campus'}</span>
+                    <span className="font-mono text-emerald-400">{userProfile?.gpa || '8.8 CGPA'}</span>
                   </div>
                 </div>
               </div>
@@ -604,7 +596,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
                   Technical Projects (Google X-Y-Z Formula)
                 </div>
                 <div className="space-y-3">
-                  {userProfile.projects && userProfile.projects.length > 0 ? (
+                  {userProfile?.projects && userProfile.projects.length > 0 ? (
                     userProfile.projects.map((proj) => (
                       <div key={proj.id} className="bg-zinc-900/60 p-2.5 rounded border border-zinc-800/80">
                         <div className="flex justify-between items-center mb-1">
@@ -617,7 +609,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
                           {proj.descriptionXYZ}
                         </p>
                         <div className="mt-2 flex flex-wrap gap-1">
-                          {proj.techStack.map((tech) => (
+                          {proj.techStack?.map((tech) => (
                             <span key={tech} className="text-[9px] font-mono bg-zinc-800 text-zinc-300 px-1.5 py-0.5 rounded">
                               {tech}
                             </span>
@@ -638,7 +630,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
                   Experience & Leadership
                 </div>
                 <div className="space-y-2">
-                  {userProfile.experiences && userProfile.experiences.length > 0 ? (
+                  {userProfile?.experiences && userProfile.experiences.length > 0 ? (
                     userProfile.experiences.map((exp) => (
                       <div key={exp.id} className="space-y-1">
                         <div className="flex justify-between text-zinc-200 font-medium">
@@ -646,7 +638,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
                           <span className="text-zinc-400 text-[11px] font-mono">{exp.company}</span>
                         </div>
                         <ul className="list-disc list-inside text-[11px] text-zinc-400 space-y-0.5">
-                          {exp.highlights.map((h, i) => (
+                          {exp.highlights?.map((h, i) => (
                             <li key={i}>{h}</li>
                           ))}
                         </ul>
@@ -665,7 +657,7 @@ export const CounselorChat: React.FC<CounselorChatProps> = ({
                   Extracted Tech Stack Keywords
                 </div>
                 <div className="flex flex-wrap gap-1">
-                  {userProfile.techSkills.map((skill) => (
+                  {userProfile?.techSkills?.map((skill) => (
                     <span
                       key={skill}
                       className="text-[10px] font-mono bg-zinc-800 text-orange-400 px-2 py-0.5 rounded border border-zinc-700"

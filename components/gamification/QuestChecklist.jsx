@@ -2,24 +2,16 @@
 
 import React, { useState } from 'react';
 import { QuestCard } from './QuestCard';
-import { Quest, RankTier } from '@/types';
-import { Card } from '@/components/ui/Card';
+import { Card } from '../ui/Card';
 import { Trophy, Zap, Sparkles, CheckCircle2, ShieldCheck } from 'lucide-react';
 
-export interface QuestChecklistProps {
-  quests: Quest[];
-  totalXp: number;
-  currentRank: RankTier;
-  onCompleteQuest: (questId: string, xp: number) => void;
-}
-
-export const QuestChecklist: React.FC<QuestChecklistProps> = ({
-  quests,
-  totalXp,
-  currentRank,
+export const QuestChecklist = ({
+  quests = [],
+  totalXp = 450,
+  currentRank = 'Apprentice',
   onCompleteQuest,
 }) => {
-  const [activeCategory, setActiveCategory] = useState<string>('All');
+  const [activeCategory, setActiveCategory] = useState('All');
 
   const categories = ['All', 'Skill Gap', 'LeetCode Pattern', 'Resume Enhancement', 'Interview Prep'];
 
@@ -33,7 +25,7 @@ export const QuestChecklist: React.FC<QuestChecklistProps> = ({
   const completionPercentage = totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
 
   // Strict Rank progression mapping: Novice (<300 XP) -> Apprentice (300-700 XP) -> Job-Ready (700+ XP)
-  const rankThresholds: Record<RankTier, { next: RankTier | 'Max Tier'; targetXp: number }> = {
+  const rankThresholds = {
     Novice: { next: 'Apprentice', targetXp: 300 },
     Apprentice: { next: 'Job-Ready', targetXp: 700 },
     'Job-Ready': { next: 'Max Tier', targetXp: 1000 },

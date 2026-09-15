@@ -1,12 +1,11 @@
 'use client';
 
 import React, { useState } from 'react';
-import { UserProfile, AtsMetrics, Quest, RankTier, SkillGap } from '@/types';
-import CounselorChat from '@/components/counselor/CounselorChat';
-import AtsAuditView from '@/components/audit/AtsAuditView';
-import MockInterviewPlaceholder from '@/components/interview/MockInterviewPlaceholder';
-import QuestChecklist from '@/components/gamification/QuestChecklist';
-import { Button } from '@/components/ui/Button';
+import CounselorChat from '../components/counselor/CounselorChat';
+import AtsAuditView from '../components/audit/AtsAuditView';
+import MockInterviewPlaceholder from '../components/interview/MockInterviewPlaceholder';
+import PlacementArena from '../components/gamification/PlacementArena';
+import { Button } from '../components/ui/Button';
 import {
   Bot,
   FileCheck2,
@@ -16,19 +15,19 @@ import {
   Trophy,
   Flame,
   ChevronRight,
-  ListTodo
+  Gamepad2
 } from 'lucide-react';
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState<'counselor' | 'audit' | 'interview'>('counselor');
-  const [showQuestsModal, setShowQuestsModal] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState('counselor');
+  const [showQuestsModal, setShowQuestsModal] = useState(false);
 
   // Global Gamification & User State
-  const [totalXp, setTotalXp] = useState<number>(450);
-  const [completedStepIds, setCompletedStepIds] = useState<number[]>([1, 2]);
+  const [totalXp, setTotalXp] = useState(450);
+  const [completedStepIds, setCompletedStepIds] = useState([1, 2]);
 
   // Initial Profile Data
-  const [userProfile, setUserProfile] = useState<UserProfile>({
+  const [userProfile, setUserProfile] = useState({
     targetRole: 'Full Stack Engineer (Campus Placement)',
     targetIndustry: 'FinTech & Cloud Systems',
     degree: 'B.Tech in Computer Science & Engineering',
@@ -76,7 +75,7 @@ export default function Home() {
   });
 
   // Sample Placement Skill Gaps & Quests
-  const initialQuests: Quest[] = [
+  const initialQuests = [
     {
       id: 'q-redis',
       title: 'Master Redis Distributed Caching',
@@ -128,10 +127,10 @@ export default function Home() {
     },
   ];
 
-  const [quests, setQuests] = useState<Quest[]>(initialQuests);
+  const [quests, setQuests] = useState(initialQuests);
 
   // ATS Metrics State
-  const initialAtsMetrics: AtsMetrics = {
+  const initialAtsMetrics = {
     score: 78,
     rankTier: 'Apprentice',
     matchedCount: 5,
@@ -219,10 +218,10 @@ export default function Home() {
     ],
   };
 
-  const [atsMetrics, setAtsMetrics] = useState<AtsMetrics>(initialAtsMetrics);
+  const [atsMetrics, setAtsMetrics] = useState(initialAtsMetrics);
 
   // Strict Rank Tier Mapping: Novice (<50% score / <300 XP), Apprentice (50-79% score / 300-700 XP), Job-Ready (80%+ score / 700+ XP)
-  const calculateRankTier = (xp: number, score: number): RankTier => {
+  const calculateRankTier = (xp, score) => {
     if (score >= 80 || xp >= 700) return 'Job-Ready';
     if (score >= 50 || xp >= 300) return 'Apprentice';
     return 'Novice';
@@ -231,7 +230,7 @@ export default function Home() {
   const currentRankTier = calculateRankTier(totalXp, atsMetrics.score);
 
   // Award XP Handler
-  const handleAwardXp = (amount: number, reason: string) => {
+  const handleAwardXp = (amount, reason) => {
     const newXp = totalXp + amount;
     setTotalXp(newXp);
     setAtsMetrics((prev) => ({
@@ -240,31 +239,11 @@ export default function Home() {
     }));
   };
 
-  // Complete Quest Handler
-  const handleCompleteQuest = (questId: string, xpReward: number) => {
-    setQuests((prev) =>
-      prev.map((q) => (q.id === questId ? { ...q, isCompleted: true } : q))
-    );
-
-    const newXp = totalXp + xpReward;
-    setTotalXp(newXp);
-
-    setAtsMetrics((prev) => {
-      const newScore = Math.min(100, prev.score + 5);
-      return {
-        ...prev,
-        score: newScore,
-        rankTier: calculateRankTier(newXp, newScore),
-        keywordDensityScore: Math.min(100, prev.keywordDensityScore + 5),
-      };
-    });
-  };
-
-  const handleUpdateProfile = (updated: Partial<UserProfile>) => {
+  const handleUpdateProfile = (updated) => {
     setUserProfile((prev) => ({ ...prev, ...updated }));
   };
 
-  const handleCompleteStep = (stepId: number) => {
+  const handleCompleteStep = (stepId) => {
     if (!completedStepIds.includes(stepId)) {
       setCompletedStepIds((prev) => [...prev, stepId]);
     }
@@ -273,8 +252,8 @@ export default function Home() {
     }
   };
 
-  const handleAddSkillAsQuest = (skill: SkillGap) => {
-    const newQuest: Quest = {
+  const handleAddSkillAsQuest = (skill) => {
+    const newQuest = {
       id: `quest-${skill.id}`,
       title: `Remediate Skill Gap: ${skill.name}`,
       category: 'Skill Gap',
@@ -341,8 +320,8 @@ export default function Home() {
             onClick={() => setShowQuestsModal(!showQuestsModal)}
             className="p-2 rounded-xl bg-orange-500 hover:bg-orange-600 text-zinc-950 font-bold transition-all shadow-md shadow-orange-500/20 flex items-center gap-1.5 text-xs"
           >
-            <ListTodo className="w-4 h-4" />
-            <span className="hidden sm:inline">Quests Hub</span>
+            <Gamepad2 className="w-4 h-4" />
+            <span className="hidden sm:inline">Placement Arena RPG</span>
           </button>
         </div>
       </header>
@@ -489,25 +468,24 @@ export default function Home() {
           </div>
         )}
 
-        {/* Embedded Remediation Quests Section */}
+        {/* Embedded Placement Arena RPG Engine */}
         <div className="pt-8 border-t border-zinc-800">
-          <QuestChecklist
-            quests={quests}
-            totalXp={totalXp}
-            currentRank={currentRankTier}
-            onCompleteQuest={handleCompleteQuest}
+          <PlacementArena
+            globalXp={totalXp}
+            currentRankTier={currentRankTier}
+            onAwardXp={handleAwardXp}
           />
         </div>
       </main>
 
-      {/* Quests Modal Drawer Overlay */}
+      {/* Placement Arena RPG Drawer Overlay */}
       {showQuestsModal && (
         <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="max-w-3xl w-full max-h-[90vh] overflow-y-auto space-y-4 bg-zinc-950 p-6 rounded-2xl border border-zinc-800 shadow-2xl">
+          <div className="max-w-4xl w-full max-h-[92vh] overflow-y-auto space-y-4 bg-zinc-950 p-6 rounded-2xl border border-zinc-800 shadow-2xl">
             <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
               <div className="flex items-center gap-2">
-                <Trophy className="w-5 h-5 text-orange-400" />
-                <h3 className="text-base font-bold text-white">Gamified Remediation Quests Hub</h3>
+                <Gamepad2 className="w-5 h-5 text-orange-400" />
+                <h3 className="text-base font-bold text-white">Placement Arena RPG World Map</h3>
               </div>
               <button
                 onClick={() => setShowQuestsModal(false)}
@@ -517,11 +495,10 @@ export default function Home() {
               </button>
             </div>
 
-            <QuestChecklist
-              quests={quests}
-              totalXp={totalXp}
-              currentRank={currentRankTier}
-              onCompleteQuest={handleCompleteQuest}
+            <PlacementArena
+              globalXp={totalXp}
+              currentRankTier={currentRankTier}
+              onAwardXp={handleAwardXp}
             />
           </div>
         </div>
@@ -533,7 +510,7 @@ export default function Home() {
           <ShieldCheck className="w-4 h-4 text-emerald-400" />
           <span>Parichaya — 100% Zero-Cloud On-Device Execution</span>
         </div>
-        <p>Built for Placement-Seeking Students • Next.js App Router • React • TypeScript • Tailwind CSS</p>
+        <p>Built for Placement-Seeking Students • Next.js App Router • React • Tailwind CSS</p>
       </footer>
     </div>
   );
