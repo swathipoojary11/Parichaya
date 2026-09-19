@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Parichaya Companion</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>PARICHAYA</h2>
+      <p>AI Interview Companion</p>
+    </div>
+
+    <div id="setup-view" class="view active">
+      <div class="form-group">
+        <label>Role:</label>
+        <input type="text" id="role-input" value="Backend Developer" />
+      </div>
+      <div class="status">
+        <span class="dot green"></span> Ready
+      </div>
+      <button id="start-btn" class="btn primary">🎙 Start Interview</button>
+    </div>
+
+    <div id="recording-view" class="view">
+      <div class="recording-header">
+        <span class="recording-pulse"></span>
+        <span id="timer">00:00</span>
+      </div>
+      <div class="metrics">
+        <div class="metric">
+          <label>WPM</label>
+          <span id="wpm-display">0</span>
+        </div>
+        <div class="metric">
+          <label>Fillers</label>
+          <span id="filler-display">0</span>
+        </div>
+      </div>
+      <div class="transcript-box">
+        <div id="interim-transcript" class="interim"></div>
+        <div id="final-transcript" class="final"></div>
+      </div>
+      <button id="finish-btn" class="btn stop">Finish Interview</button>
+    </div>
+
+    <div id="loading-view" class="view">
+      <div class="spinner"></div>
+      <p>AI is evaluating your interview...</p>
+    </div>
+
+    <div id="result-view" class="view">
+      <h3>INTERVIEW REVIEW</h3>
+      <div class="score-banner">
+        <span>Overall</span>
+        <strong id="overall-score">--</strong>
+      </div>
+      <div class="details">
+        <p>WPM: <span id="res-wpm"></span></p>
+        <p>Fillers: <span id="res-fillers"></span></p>
+      </div>
+      <div class="feedback-box">
+        <h4>What You Did Well</h4>
+        <ul id="res-strengths"></ul>
+      </div>
+      <div class="feedback-box">
+        <h4>Improve Next</h4>
+        <ul id="res-improvements"></ul>
+      </div>
+      <button id="open-app-btn" class="btn primary outline">Open Full Review</button>
+    </div>
+  </div>
+  <script src="services/api.js"></script>
+  <script src="services/speech.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

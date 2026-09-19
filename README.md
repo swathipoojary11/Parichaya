@@ -1,69 +1,34 @@
-# Career Catalyst: Your Lifelong Learning Coach
+This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-**AI For India: Empowering Minds, Enabling Futures**
+## Getting Started
 
-Career Catalyst is a cutting-edge, AI-powered personal career coach designed specifically for Indian professionals. Whether you are a fresh graduate (New Entrant), looking to switch industries (Career Changer), or returning to the workforce after a break (Career Returner), Career Catalyst creates a hyper-personalized pathway to help you achieve your aspirations.
+First, run the development server:
 
-## 🚀 Key Features
-
-*   **Personalized Skill Roadmaps**: Generates step-by-step learning paths tailored to your current profile and target career using advanced AI.
-*   **Resume Autofill**: Upload your PDF resume to automatically populate your professional profile instantly.
-*   **Multilingual Support**: Fully localized in **English, Hindi, Tamil, Telugu, Kannada, Bengali, and Malayalam** to support diverse users across India.
-*   **AI Interview Coach**:
-    *   **Text & Audio Mock Interviews**: Practice behavioral and technical interviews with a real-time AI coach powered by the Multimodal Live API.
-    *   **Live Feedback**: Receive instant, constructive feedback on your answers, including clarity, impact, and technical correctness.
-    *   **Elevator Pitch Refinement**: Hone your introduction with specific scoring and actionable suggestions.
-*   **Visual Jamboard**: Break down complex concepts into simple, illustrated steps using AI-generated explanations and visuals.
-*   **Daily Bytes**: Stay updated with curated, relevant industry news and developments specific to your target role.
-*   **Technical Challenges**: Solve coding and case-study challenges generated on the fly based on specific job descriptions.
-
-## 🛠️ Technologies Used
-
-*   **Frontend**: React (v19), Tailwind CSS for responsive and accessible UI.
-*   **AI Models**:
-    *   **Gemini 2.5 Flash**: For fast, reasoning-based content generation (Roadmaps, News, Interview logic).
-    *   **Gemini 2.5 Flash Native Audio**: For real-time, low-latency audio interview simulations.
-    *   **Imagen 3**: For generating educational visuals in the Jamboard.
-*   **Speech Services**: Web Speech API for text-to-speech synthesis and native browser audio handling.
-*   **PDF Processing**: pdf.js for client-side resume parsing.
-
-## 🏁 Getting Started
-
-### Prerequisites
-
-*   Node.js (v18 or higher recommended)
-*   npm or yarn
-
-### Installation
-
-1.  Clone the repository:
-    ```bash
-    git clone https://github.com/ishatilwani1301/career-catalyst.git
-    cd career-catalyst
-    ```
-
-2.  Install dependencies:
-    ```bash
-    npm install
-    ```
-
-### Configuration
-
-1.  Create a `.env` file in the root directory.
-2.  Add your Gemini API key:
-    ```env
-    API_KEY=your_gemini_api_key_here
-    ```
-
-### Running the App
-
-Start the development server:
 ```bash
-npm start
+npm run dev
+# or
+yarn dev
+# or
+pnpm dev
+# or
+bun dev
 ```
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
+You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
 
----
-*Empowering India's workforce, one skill at a time.*
+## Learn More
+
+To learn more about Next.js, take a look at the following resources:
+
+- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
+- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+
+You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+
+## Deploy on Vercel
+
+The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+
+Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.

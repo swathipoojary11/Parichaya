@@ -1,0 +1,249 @@
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800;900&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;700&display=swap');
+@import "tailwindcss";
+
+/* ============================================================
+   PARICHAYA AURA 2.0 — Modern SaaS Warm Gradient Theme
+   ============================================================ */
+
+:root {
+  /* Brand Colors */
+  --orange-primary: #F95721;
+  --orange-hover:   #E04815;
+  --orange-glow:    rgba(249, 87, 33, 0.25);
+  --amber:          #FF9F1C;
+  --yellow-glow:    #FFE666;
+  --slate-dark:     #0F172A;
+  --slate-header:   #18181B;
+  
+  /* Core UI Colors */
+  --bg-main:        #FAF7F2;
+  --bg-paper:       #FFFFFF;
+  --border-subtle:  #E2E8F0;
+  --text-main:      #0F172A;
+  --text-muted:     #64748B;
+  
+  /* Modern SaaS Shadows & Radii */
+  --shadow-card:    0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 4px 12px -2px rgba(0, 0, 0, 0.02);
+  --shadow-card-hover: 0 20px 35px -10px rgba(249, 87, 33, 0.12), 0 8px 16px -4px rgba(0, 0, 0, 0.04);
+  --shadow-glow:    0 0 25px rgba(249, 87, 33, 0.3);
+
+  /* Radii */
+  --radius-sm:      8px;
+  --radius-md:      14px;
+  --radius-lg:      20px;
+  --radius-xl:      28px;
+  --radius-full:    9999px;
+
+  /* Transitions */
+  --transition:     all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@theme {
+  --color-brand-orange: #F95721;
+  --color-brand-amber:  #FF9F1C;
+  --font-sans:          'Inter', system-ui, sans-serif;
+  --font-heading:       'Outfit', system-ui, sans-serif;
+  --font-mono:          'JetBrains Mono', monospace;
+}
+
+/* ============================================================
+   BASE
+   ============================================================ */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Soft glowing atmospheric gradient matching reference UI */
+    background-image: 
+      radial-gradient(circle at 10% 10%, rgba(255, 237, 213, 0.7) 0%, transparent 45%),
+      radial-gradient(circle at 90% 40%, rgba(254, 215, 170, 0.5) 0%, transparent 50%),
+      radial-gradient(circle at 50% 95%, rgba(254, 240, 138, 0.3) 0%, transparent 50%);
+    background-attachment: fixed;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Outfit', system-ui, sans-serif;
+    color: var(--text-main);
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar       { width: 8px; height: 8px; }
+  ::-webkit-scrollbar-track { background: var(--bg-main); }
+  ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 9999px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--orange-primary); }
+
+  ::selection {
+    background: #FFEDD5;
+    color: var(--orange-primary);
+  }
+}
+
+/* ============================================================
+   MODERN SAAS UTILITIES & COMPONENTS
+   ============================================================ */
+@layer utilities {
+
+  /* --- Modern SaaS Cards --- */
+  .card {
+    background: var(--bg-paper);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-card);
+    transition: var(--transition);
+  }
+
+  .card-hover:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-card-hover);
+    border-color: rgba(249, 87, 33, 0.3);
+  }
+
+  /* --- Modern SaaS Buttons --- */
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, #F95721 0%, #FF7A00 100%);
+    color: #ffffff;
+    font-family: 'Outfit', sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+    border-radius: var(--radius-full);
+    border: none;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 4px 14px rgba(249, 87, 33, 0.3);
+  }
+  .btn-primary:hover {
+    background: linear-gradient(135deg, #E04815 0%, #F95721 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(249, 87, 33, 0.45);
+  }
+  .btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 8px rgba(249, 87, 33, 0.2);
+  }
+
+  .btn-ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: var(--bg-paper);
+    color: var(--text-main);
+    font-size: 14px;
+    font-weight: 600;
+    font-family: 'Outfit', sans-serif;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-full);
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  }
+  .btn-ghost:hover {
+    background: #FFF7ED;
+    border-color: #FFEDD5;
+    color: var(--orange-primary);
+    transform: translateY(-1px);
+  }
+  .btn-ghost:active {
+    transform: translateY(0);
+  }
+
+  /* --- Badges --- */
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    font-size: 12px;
+    font-weight: 700;
+    font-family: 'Outfit', sans-serif;
+    border-radius: var(--radius-full);
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-paper);
+    color: var(--text-main);
+  }
+  .badge-orange { background: #FFF7ED; border-color: #FFEDD5; color: #F95721; }
+  .badge-teal   { background: #F0FDF4; border-color: #DCFCE7; color: #16A34A; }
+  .badge-purple { background: #FAF5FF; border-color: #F3E8FF; color: #9333EA; }
+
+  /* --- Input fields --- */
+  .input-field {
+    width: 100%;
+    padding: 14px 18px;
+    background: var(--bg-paper);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    color: var(--text-main);
+    font-size: 15px;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+    outline: none;
+    transition: var(--transition);
+  }
+  .input-field::placeholder { color: var(--text-muted); }
+  .input-field:focus {
+    border-color: var(--orange-primary);
+    box-shadow: 0 0 0 3px rgba(249, 87, 33, 0.15);
+  }
+
+  /* --- Progress bar --- */
+  .progress-track {
+    width: 100%;
+    height: 10px;
+    background: #F1F5F9;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #F95721 0%, #FF9F1C 100%);
+    border-radius: var(--radius-full);
+    transition: width 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* --- Animations --- */
+  .animate-fade-in { animation: fadeIn 0.3s ease-out forwards; }
+  .animate-slide-up { animation: slideUp 0.4s ease-out forwards; }
+  .animate-float { animation: floatNPC 4s ease-in-out infinite; }
+  .animate-pulse-ui { animation: pulseUI 2s infinite; }
+  
+  .spin { animation: spin 1s linear infinite; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes floatNPC {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-6px); }
+}
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes pulseUI {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.04); }
+}
+
